@@ -77,7 +77,7 @@
                     }
                     break;
                 default:
-                    throw 'Unknown command ' + cmd.type;
+                    throw new Error('Unknown command ' + cmd.type);
             }
         };
     }
@@ -264,7 +264,7 @@
                 const message = messages[i];
                 const json = JSON.stringify(message);
                 if (json.length > maxSize) {
-                    throw 'maxSendBayeuxMessageSize ' + maxSize + ' exceeded';
+                    throw new Error('maxSendBayeuxMessageSize ' + maxSize + ' exceeded');
                 }
                 result += json;
             }
@@ -283,7 +283,7 @@
                     return JSON.parse(response);
                 } catch (x) {
                     this._debug('Could not convert to JSON the following string', '"' + response + '"');
-                    throw x;
+                    throw new Error(x);
                 }
             }
             if (Array.isArray(response)) {
@@ -295,7 +295,7 @@
             if (response instanceof Object) {
                 return [response];
             }
-            throw 'Conversion Error ' + response + ', typeof ' + (typeof response);
+            throw new Error('Conversion Error ' + response + ', typeof ' + (typeof response));
         };
 
         /**
@@ -307,7 +307,7 @@
          * false otherwise
          */
         this.accept = (version, crossDomain, url) => {
-            throw 'Abstract';
+            throw new Error('Abstract');
         };
 
         /**
@@ -323,7 +323,7 @@
         };
 
         this.send = (envelope, metaConnect) => {
-            throw 'Abstract';
+            throw new Error('Abstract');
         };
 
         this.reset = function(init) {
@@ -442,7 +442,7 @@
             const requestId = request.id;
             this._debug('Transport', this.getType(), '/meta/connect complete, request', requestId);
             if (_metaConnectRequest !== null && _metaConnectRequest.id !== requestId) {
-                throw '/meta/connect request mismatch, completing request ' + requestId;
+                throw new Error('/meta/connect request mismatch, completing request ' + requestId);
             }
             _metaConnectRequest = null;
         }
@@ -495,7 +495,7 @@
          * @return {boolean} whether the send succeeded
          */
         _self.transportSend = (envelope, request) => {
-            throw 'Abstract';
+            throw new Error('Abstract');
         };
 
         _self.transportSuccess = function(envelope, request, responses) {
@@ -524,7 +524,7 @@
 
         function _metaConnectSend(envelope) {
             if (_metaConnectRequest !== null) {
-                throw 'Concurrent /meta/connect requests not allowed, request id=' + _metaConnectRequest.id + ' not yet completed';
+                throw new Error('Concurrent /meta/connect requests not allowed, request id=' + _metaConnectRequest.id + ' not yet completed');
             }
 
             const requestId = ++_requestIds;
@@ -988,7 +988,7 @@
             } catch (x) {
                 _webSocketSupported = false;
                 this._debug('Exception while creating WebSocket object', x);
-                throw x;
+                throw new Error(x);
             }
 
             // By default use sticky reconnects.
@@ -1546,7 +1546,7 @@
 
             const url = _cometd.getURL();
             if (!url) {
-                throw 'Missing required configuration parameter \'url\' specifying the Bayeux server URL';
+                throw new Error('Missing required configuration parameter \'url\' specifying the Bayeux server URL');
             }
 
             // Check if we're cross domain.
@@ -1905,7 +1905,7 @@
             --_batch;
             _cometd._debug('Ending batch, depth', _batch);
             if (_batch < 0) {
-                throw 'Calls to startBatch() and endBatch() are not paired';
+                throw new Error('Calls to startBatch() and endBatch() are not paired');
             }
 
             if (_batch === 0 && !_isDisconnected() && !_internalBatch) {
@@ -2060,7 +2060,7 @@
                 if (!_transport) {
                     const failure = 'Could not find initial transport among: ' + _transports.getTransportTypes();
                     _cometd._warn(failure);
-                    throw failure;
+                    throw new Error(failure);
                 }
             }
 
@@ -2243,7 +2243,7 @@
                     _disconnect(true);
                     break;
                 default:
-                    throw 'Unknown action ' + action;
+                    throw new Error('Unknown action ' + action);
             }
         }
 
@@ -2310,7 +2310,7 @@
                         _disconnect(true);
                         break;
                     default:
-                        throw 'Unrecognized advice action ' + action;
+                        throw new Error('Unrecognized advice action ' + action);
                 }
             } else {
                 _failHandshake(message, {
@@ -2373,7 +2373,7 @@
                             _disconnect(false);
                             break;
                         default:
-                            throw 'Unrecognized advice action ' + action;
+                            throw new Error('Unrecognized advice action ' + action);
                     }
                 } else {
                     _failConnect(message, {
@@ -2622,14 +2622,14 @@
             } else {
                 if (_isString(callback)) {
                     if (!scope) {
-                        throw 'Invalid scope ' + scope;
+                        throw new Error('Invalid scope ' + scope);
                     }
                     delegate.method = scope[callback];
                     if (!_isFunction(delegate.method)) {
-                        throw 'Invalid callback ' + callback + ' for scope ' + scope;
+                        throw new Error('Invalid callback ' + callback + ' for scope ' + scope);
                     }
                 } else if (!_isFunction(callback)) {
-                    throw 'Invalid callback ' + callback;
+                    throw new Error('Invalid callback ' + callback);
                 }
             }
             return delegate;
@@ -2757,7 +2757,7 @@
          */
         this.handshake = (handshakeProps, handshakeCallback) => {
             if (_status !== 'disconnected') {
-                throw 'Illegal state: handshaken';
+                throw new Error('Illegal state: handshaken');
             }
             _handshake(handshakeProps, handshakeCallback);
         };
@@ -2828,7 +2828,7 @@
             } catch (x) {
                 this._info('Exception during execution of batch', x);
                 this.endBatch();
-                throw x;
+                throw new Error(x);
             }
         };
 
@@ -2851,7 +2851,7 @@
          */
         this.addTransportListener = (event, callback) => {
             if (event !== 'timeout') {
-                throw 'Unsupported event ' + event;
+                throw new Error('Unsupported event ' + event);
             }
             let callbacks = _transportListeners[event];
             if (!callbacks) {
@@ -2892,10 +2892,10 @@
          */
         this.addListener = function(channel, scope, callback) {
             if (arguments.length < 2) {
-                throw 'Illegal arguments number: required 2, got ' + arguments.length;
+                throw new Error('Illegal arguments number: required 2, got ' + arguments.length);
             }
             if (!_isString(channel)) {
-                throw 'Illegal argument type: channel must be a string';
+                throw new Error('Illegal argument type: channel must be a string');
             }
 
             return _addListener(channel, scope, callback, true);
@@ -2909,7 +2909,7 @@
         this.removeListener = subscription => {
             // Beware of subscription.id == 0, which is falsy => cannot use !subscription.id
             if (!subscription || !subscription.channel || !("id" in subscription)) {
-                throw 'Invalid argument: expected subscription, not ' + subscription;
+                throw new Error('Invalid argument: expected subscription, not ' + subscription);
             }
 
             _removeListener(subscription);
@@ -2935,13 +2935,13 @@
          */
         this.subscribe = function(channel, scope, callback, subscribeProps, subscribeCallback) {
             if (arguments.length < 2) {
-                throw 'Illegal arguments number: required 2, got ' + arguments.length;
+                throw new Error('Illegal arguments number: required 2, got ' + arguments.length);
             }
             if (!_isValidChannel(channel)) {
-                throw 'Illegal argument: invalid channel ' + channel;
+                throw new Error('Illegal argument: invalid channel ' + channel);
             }
             if (_isDisconnected()) {
-                throw 'Illegal state: disconnected';
+                throw new Error('Illegal state: disconnected');
             }
 
             // Normalize arguments
@@ -3002,10 +3002,10 @@
          */
         this.unsubscribe = function(subscription, unsubscribeProps, unsubscribeCallback) {
             if (arguments.length < 1) {
-                throw 'Illegal arguments number: required 1, got ' + arguments.length;
+                throw new Error('Illegal arguments number: required 1, got ' + arguments.length);
             }
             if (_isDisconnected()) {
-                throw 'Illegal state: disconnected';
+                throw new Error('Illegal state: disconnected');
             }
 
             if (_isFunction(unsubscribeProps)) {
@@ -3072,16 +3072,16 @@
          */
         this.publish = function(channel, content, publishProps, publishCallback) {
             if (arguments.length < 1) {
-                throw 'Illegal arguments number: required 1, got ' + arguments.length;
+                throw new Error('Illegal arguments number: required 1, got ' + arguments.length);
             }
             if (!_isValidChannel(channel)) {
-                throw 'Illegal argument: invalid channel ' + channel;
+                throw new Error('Illegal argument: invalid channel ' + channel);
             }
             if (/^\/meta\//.test(channel)) {
-                throw 'Illegal argument: cannot publish to meta channels';
+                throw new Error('Illegal argument: cannot publish to meta channels');
             }
             if (_isDisconnected()) {
-                throw 'Illegal state: disconnected';
+                throw new Error('Illegal state: disconnected');
             }
 
             if (_isFunction(content)) {
@@ -3166,13 +3166,13 @@
          */
         this.remoteCall = function(target, content, timeout, callProps, callback) {
             if (arguments.length < 1) {
-                throw 'Illegal arguments number: required 1, got ' + arguments.length;
+                throw new Error('Illegal arguments number: required 1, got ' + arguments.length);
             }
             if (!_isString(target)) {
-                throw 'Illegal argument type: target must be a string';
+                throw new Error('Illegal argument type: target must be a string');
             }
             if (_isDisconnected()) {
-                throw 'Illegal state: disconnected';
+                throw new Error('Illegal state: disconnected');
             }
 
             if (_isFunction(content)) {
@@ -3190,7 +3190,7 @@
             }
 
             if (typeof timeout !== 'number') {
-                throw 'Illegal argument type: timeout must be a number';
+                throw new Error('Illegal argument type: timeout must be a number');
             }
 
             if (!target.match(/^\//)) {
@@ -3198,7 +3198,7 @@
             }
             const channel = '/service' + target;
             if (!_isValidChannel(channel)) {
-                throw 'Illegal argument: invalid target ' + target;
+                throw new Error('Illegal argument: invalid target ' + target);
             }
 
             const bayeuxMessage = {
@@ -3361,10 +3361,10 @@
          */
         this.registerExtension = function(name, extension) {
             if (arguments.length < 2) {
-                throw 'Illegal arguments number: required 2, got ' + arguments.length;
+                throw new Error('Illegal arguments number: required 2, got ' + arguments.length);
             }
             if (!_isString(name)) {
-                throw 'Illegal argument type: extension name must be a string';
+                throw new Error('Illegal argument type: extension name must be a string');
             }
 
             let existing = false;
@@ -3402,7 +3402,7 @@
          */
         this.unregisterExtension = function(name) {
             if (!_isString(name)) {
-                throw 'Illegal argument type: extension name must be a string';
+                throw new Error('Illegal argument type: extension name must be a string');
             }
 
             let unregistered = false;
@@ -3545,7 +3545,7 @@
                 buffer = new Uint8Array(bytes).buffer;
             }
             if (buffer == null) {
-                throw 'Cannot Z85 encode ' + bytes;
+                throw new Error('Cannot Z85 encode ' + bytes);
             }
 
             const length = buffer.byteLength;
