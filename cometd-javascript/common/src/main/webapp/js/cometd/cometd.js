@@ -3558,12 +3558,14 @@
             _scheduler.clearTimeout(id);
         };
 
-        // Initialize transports.
-        if (window.WebSocket) {
-            this.registerTransport('websocket', new WebSocketTransport());
-        }
-        this.registerTransport('long-polling', new LongPollingTransport());
-        this.registerTransport('callback-polling', new CallbackPollingTransport());
+		if (!opts || !opts.noDefaultTransports) {
+	        // Initialize transports.
+	        if (window.WebSocket) {
+	            this.registerTransport('websocket', new WebSocketTransport());
+	        }
+			this.registerTransport('long-polling', new LongPollingTransport());
+			this.registerTransport('callback-polling', new CallbackPollingTransport());
+		}
     }
 
     const _z85EncodeTable = [
