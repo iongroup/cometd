@@ -29,6 +29,10 @@
         root.org.cometd = factory();
     }
 })(this, () => {
+
+    // Uses setTimeout, clearTimeout, XMLHttpRequest, WebSocket, console, location.
+    var global = typeof window !== 'undefined' ? window : { };
+
     /**
      * Browsers may throttle the Window scheduler,
      * so we may replace it with a Worker scheduler.
@@ -92,6 +96,39 @@
                 return false;
             }
             return typeof value === 'string' || value instanceof String;
+        },
+        isArray: function(value) {
+            if (value === undefined || value === null) {
+                return false;
+            }
+            return value instanceof Array;
+        },
+        /**
+         * Returns whether the given element is contained into the given array.
+         * @param element the element to check presence for
+         * @param array the array to check for the element presence
+         * @return the index of the element, if present, or a negative index if the element is not present
+         */
+        inArray: function(element, array) {
+            for (var i = 0; i < array.length; ++i) {
+                if (element === array[i]) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+        setTimeout: function(cometd, funktion, delay) {
+            return global.setTimeout(function() {
+                try {
+                    cometd._debug('Invoking timed function', funktion);
+                    funktion();
+                } catch (x) {
+                    cometd._debug('Exception invoking timed function', funktion, x);
+                }
+            }, delay);
+        },
+        clearTimeout: function(timeoutHandle) {
+            global.clearTimeout(timeoutHandle);
         }
     };
 
@@ -579,7 +616,7 @@
                 try {
                     const state = xhr.readyState;
                     xhr.abort();
-                    return state !== window.XMLHttpRequest.UNSENT;
+                    return state !== global.XMLHttpRequest.UNSENT;
                 } catch (x) {
                     this._debug(x);
                 }
@@ -610,7 +647,7 @@
 
         _self.accept = (version, crossDomain, url) => _supportsCrossDomain || !crossDomain;
 
-        _self.newXMLHttpRequest = () => new window.XMLHttpRequest();
+        _self.newXMLHttpRequest = () => new global.XMLHttpRequest();
 
         function _copyContext(xhr) {
             try {
@@ -742,9 +779,9 @@
             const script = document.createElement('script');
 
             const callbackName = '_cometd_jsonp_' + jsonp++;
-            window[callbackName] = responseText => {
+            global[callbackName] = responseText => {
                 head.removeChild(script);
-                delete window[callbackName];
+                delete global[callbackName];
                 packet.onSuccess(responseText);
             };
 
@@ -983,7 +1020,7 @@
 
             try {
                 const protocol = _cometd.getConfiguration().protocol;
-                context.webSocket = protocol ? new window.WebSocket(url, protocol) : new window.WebSocket(url);
+                context.webSocket = protocol ? new global.WebSocket(url, protocol) : new global.WebSocket(url);
                 _connecting = context;
             } catch (x) {
                 _webSocketSupported = false;
@@ -1257,7 +1294,7 @@
         _self.accept = function(version, crossDomain, url) {
             this._debug('Transport', this.getType(), 'accept, supported:', _webSocketSupported);
             // Using !! to return a boolean (and not the WebSocket object).
-            return _webSocketSupported && !!window.WebSocket && _cometd.websocketEnabled !== false;
+            return _webSocketSupported && !!global.WebSocket && _cometd.websocketEnabled !== false;
         };
 
         _self.send = function(envelope, metaConnect) {
@@ -1326,6 +1363,9 @@
         let _unconnectTime = 0;
         let _handshakeMessages = 0;
         let _metaConnect = null;
+        if (opts && opts.glob !== 'undefined') {
+            global = opts.glob;
+        }
         let _config = {
             useWorkerScheduler: true,
             protocol: null,
@@ -1485,13 +1525,13 @@
         }
 
         function _log(level, args) {
-            if (window.console) {
-                const logger = window.console[level];
+            if (global.console) {
+                const logger = global.console[level];
                 if (_isFunction(logger)) {
                     const now = new Date();
                     [].splice.call(args, 0, 0, _zeroPad(now.getHours(), 2) + ':' + _zeroPad(now.getMinutes(), 2) + ':' +
                         _zeroPad(now.getSeconds(), 2) + '.' + _zeroPad(now.getMilliseconds(), 3));
-                    logger.apply(window.console, args);
+                    logger.apply(global.console, args);
                 }
             }
         }
@@ -1535,9 +1575,9 @@
          * @return whether the given hostAndPort is cross domain
          */
         this._isCrossDomain = hostAndPort => {
-            if (window.location && window.location.host) {
+            if (global.location && global.location.host) {
                 if (hostAndPort) {
-                    return hostAndPort !== window.location.host;
+                    return hostAndPort !== global.location.host;
                 }
             }
             return false;
@@ -3504,12 +3544,14 @@
             _scheduler.clearTimeout(id);
         };
 
-        // Initialize transports.
-        if (window.WebSocket) {
-            this.registerTransport('websocket', new WebSocketTransport());
-        }
-        this.registerTransport('long-polling', new LongPollingTransport());
-        this.registerTransport('callback-polling', new CallbackPollingTransport());
+		if (!opts || !opts.noDefaultTransports) {
+	        // Initialize transports.
+	        if (global.WebSocket) {
+	            this.registerTransport('websocket', new WebSocketTransport());
+	        }
+			this.registerTransport('long-polling', new LongPollingTransport());
+			this.registerTransport('callback-polling', new CallbackPollingTransport());
+		}
     }
 
     const _z85EncodeTable = [
