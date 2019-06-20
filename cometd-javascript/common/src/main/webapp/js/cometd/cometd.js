@@ -2822,6 +2822,7 @@
          */
         this.disconnect = function(disconnectProps, disconnectCallback) {
             if (_isDisconnected()) {
+                disconnectCallback && disconnectCallback();
                 return;
             }
 
