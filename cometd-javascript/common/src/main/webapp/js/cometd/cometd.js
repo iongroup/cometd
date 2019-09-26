@@ -2210,11 +2210,13 @@
                     if (!failureInfo.transport) {
                         const failure = 'Could not negotiate transport, client=[' + transportTypes + '], server=[' + message.supportedConnectionTypes + ']';
                         this._warn(failure);
-                        _notifyTransportException(_transport.getType(), null, {
-                            reason: failure,
-                            connectionType: _transport.getType(),
-                            transport: _transport
-                        });
+                        if (_transport) {
+                            _notifyTransportException(_transport.getType(), null, {
+                                reason: failure,
+                                connectionType: _transport.getType(),
+                                transport: _transport
+                            });
+                        }
                     }
                 }
             } else {
@@ -2227,13 +2229,15 @@
                         const newTransport = transports.negotiateTransport(transportTypes, version, crossDomain, url);
                         if (!newTransport) {
                             this._warn('Could not negotiate transport, client=[' + transportTypes + ']');
-                            _notifyTransportException(oldTransportType, null, message.failure);
-                            failureInfo.action = 'none';
+							if (_transport) {
+                            	_notifyTransportException(oldTransportType, null, message.failure);
+							}                            failureInfo.action = 'none';
                         } else {
                             const newTransportType = newTransport.getType();
-                            this._debug('Transport', oldTransportType, '->', newTransportType);
-                            _notifyTransportException(oldTransportType, newTransportType, message.failure);
-                            failureInfo.action = 'handshake';
+							if (_transport) {
+                            	this._debug('Transport', oldTransportType, '->', newTransportType);
+                            	_notifyTransportException(oldTransportType, newTransportType, message.failure);
+							}                            failureInfo.action = 'handshake';
                             failureInfo.transport = newTransport;
                         }
                     }
