@@ -2170,11 +2170,13 @@
                     if (!failureInfo.transport) {
                         const failure = 'Could not negotiate transport, client=[' + transportTypes + '], server=[' + message.supportedConnectionTypes + ']';
                         this._warn(failure);
-                        _notifyTransportException(_transport.getType(), null, {
-                            reason: failure,
-                            connectionType: _transport.getType(),
-                            transport: _transport
-                        });
+                        if (_transport) {
+                            _notifyTransportException(_transport.getType(), null, {
+                                reason: failure,
+                                connectionType: _transport.getType(),
+                                transport: _transport
+                            });
+                        }
                     }
                 }
             } else {
@@ -2287,7 +2289,7 @@
                     });
                     return;
                 } else if (_transport !== newTransport) {
-                    _cometd._debug('Transport', _transport.getType(), '->', newTransport.getType());
+                    _cometd._debug('Transport', _transport && _transport.getType(), '->', newTransport.getType());
                     _transport = newTransport;
                 }
 
