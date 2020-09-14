@@ -1052,11 +1052,27 @@
             this._debug('Transport', this.getType(), 'configured callbacks on', context);
         }
 
+        const createRearmableTimeout = (handler, delay) => {
+            let timeout = { };
+            timeout.clear = () => {
+                timeout.timeout && this.clearTimeout(timeout.timeout);
+                timeout.timeout = null;
+            };
+            timeout.rearm = () => {
+                timeout.clear();
+                timeout.timeout = this.setTimeout(() => {
+                    handler();
+                }, delay);
+            };
+            timeout.rearm();
+            return timeout;
+        };
+
         function _onTransportTimeout(context, message, delay) {
             const result = this._notifyTransportTimeout([message]);
             if (result > 0) {
                 this._debug('Transport', this.getType(), 'extended waiting for message replies:', result, 'ms');
-                context.timeouts[message.id] = this.setTimeout(() => {
+                context.timeouts[message.id] = createRearmableTimeout(() => {
                     _onTransportTimeout.call(this, context, message, delay + result);
                 }, result);
             } else {
@@ -1104,7 +1120,7 @@
                 const message = envelope.messages[i];
                 if (message.id) {
                     messageIds.push(message.id);
-                    context.timeouts[message.id] = this.setTimeout(() => {
+                    context.timeouts[message.id] = createRearmableTimeout(() => {
                         _onTransportTimeout.call(this, context, message, delay);
                     }, delay);
                 }
@@ -1168,6 +1184,19 @@
             // Use string length (UTF-8) as an approximation
             this.onStat({ rx: (wsMessage.data && wsMessage.data.length) || 0 });
 
+            if (this.getConfiguration().rearmNetworkDelayAfterMessage) {
+                let now = (new Date()).getTime();
+                // Max 1 rearm per seconds for performance reasons
+                if (!context._lastRearm || (now - context._lastRearm) > 1000) {
+                    context._lastRearm = now;
+                    for (let id in context.timeouts) {
+                        if (context.timeouts.hasOwnProperty(id)) {
+                            context.timeouts[id].rearm();
+                        }
+                    }
+                }
+            }
+
             let close = false;
             const messages = this.convertToMessages(wsMessage.data);
             const messageIds = [];
@@ -1183,7 +1212,7 @@
 
                         const timeout = context.timeouts[message.id];
                         if (timeout) {
-                            this.clearTimeout(timeout);
+                            timeout.clear();
                             delete context.timeouts[message.id];
                             this._debug('Transport', this.getType(), 'removed timeout for message', message.id, ', timeouts', context.timeouts);
                         }
@@ -1224,7 +1253,7 @@
             context.timeouts = {};
             for (let id in timeouts) {
                 if (timeouts.hasOwnProperty(id)) {
-                    this.clearTimeout(timeouts[id]);
+                    timeouts[id].clear();
                 }
             }
 
@@ -1336,6 +1365,7 @@
             maxBackoff: 60000,
             logLevel: 'info',
             maxNetworkDelay: 10000,
+            rearmNetworkDelayAfterMessage: false,
             requestHeaders: {},
             appendMessageTypeToURL: true,
             autoBatch: false,
