@@ -115,6 +115,7 @@ export class CometD {
         maxBackoff: 60000,
         logLevel: "info",
         maxNetworkDelay: 10000,
+        rearmNetworkDelayAfterMessage: false,
         requestHeaders: {},
         appendMessageTypeToURL: true,
         autoBatch: false,
