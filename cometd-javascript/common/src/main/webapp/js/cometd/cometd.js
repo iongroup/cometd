@@ -1220,9 +1220,14 @@
 			this.onStat({ rx: (wsMessage.data && wsMessage.data.length) || 0 });
 
             if (this.getConfiguration().rearmNetworkDelayAfterMessage) {
-                for (var id in context.timeouts) {
-                    if (context.timeouts.hasOwnProperty(id)) {
-                        context.timeouts[id].rearm();
+                var now = (new Date()).getTime();
+                // Max 1 rearm per seconds for performance reasons
+                if (!context._lastRearm || (now - context._lastRearm) > 1000) {
+                    context._lastRearm = now;
+                    for (var id in context.timeouts) {
+                        if (context.timeouts.hasOwnProperty(id)) {
+                            context.timeouts[id].rearm();
+                        }
                     }
                 }
             }
