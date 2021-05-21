@@ -2359,7 +2359,7 @@
                     });
                     return;
                 } else if (_transport !== newTransport) {
-                    _cometd._debug('Transport', _transport.getType(), '->', newTransport.getType());
+                    _cometd._debug('Transport', _transport && _transport.getType(), '->', newTransport.getType());
                     _transport = newTransport;
                 }
 
