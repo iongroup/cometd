@@ -240,6 +240,10 @@
             _cometd._info.apply(_cometd, arguments);
         };
 
+        this._logError = function() {
+            _cometd._logError.apply(_cometd, arguments);
+        };
+
         this._mixin = function() {
             return _cometd._mixin.apply(_cometd, arguments);
         };
@@ -272,6 +276,15 @@
             return result;
         };
 
+        var truncateMessage = function(str) {
+            var MAX_SIZE = 512;
+            if (str.length < MAX_SIZE) {
+                return str;
+            } else {
+                return str.substr(0, MAX_SIZE / 2) + "[...]" + str.substr(str.length - MAX_SIZE / 2);
+            }
+        };
+
         /**
          * Converts the given response into an array of bayeux messages
          * @param response the response to convert
@@ -282,7 +295,7 @@
                 try {
                     return JSON.parse(response);
                 } catch (x) {
-                    this._debug('Could not convert to JSON the following string', '"' + response + '"');
+                    this._logError('Could not convert to JSON the following string', { msg: truncateMessage(response), length: response.length });
                     throw new Error(x);
                 }
             }
@@ -1515,7 +1528,11 @@
         }
 
         function _log(level, args) {
-            if (window.console) {
+            if (level === 'file') {
+                if (opts && opts.errorLogger) {
+                    opts.errorLogger.apply(null, args);
+                }
+            } else if (window.console) {
                 const logger = window.console[level];
                 if (_isFunction(logger)) {
                     const now = new Date();
@@ -1540,6 +1557,10 @@
             if (_config.logLevel === 'debug') {
                 _log('debug', arguments);
             }
+        };
+
+        this._logError = function() {
+            _log('file', arguments);
         };
 
         function _splitURL(url) {
