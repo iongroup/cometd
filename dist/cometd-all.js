@@ -229,6 +229,10 @@ var exports = undefined;
             _cometd._debug.apply(_cometd, arguments);
         };
 
+        this._logError = function() {
+            _cometd._logError.apply(_cometd, arguments);
+        };
+
         this._mixin = function() {
             return _cometd._mixin.apply(_cometd, arguments);
         };
@@ -249,6 +253,15 @@ var exports = undefined;
             Utils.clearTimeout(handle);
         };
 
+        var truncateMessage = function(str) {
+            var MAX_SIZE = 512;
+            if (str.length < MAX_SIZE) {
+                return str;
+            } else {
+                return str.substr(0, MAX_SIZE / 2) + "[...]" + str.substr(str.length - MAX_SIZE / 2);
+            }
+        };
+
         /**
          * Converts the given response into an array of bayeux messages
          * @param response the response to convert
@@ -259,7 +272,7 @@ var exports = undefined;
                 try {
                     return JSON.parse(response);
                 } catch (x) {
-                    this._debug('Could not convert to JSON the following string', '"' + response + '"');
+                    this._logError('Could not convert to JSON the following string', { msg: truncateMessage(response), length: response.length });
                     throw new Error(x);
                 }
             }
@@ -1386,7 +1399,11 @@ var exports = undefined;
         }
 
         function _log(level, args) {
-            if (global.console) {
+            if (level === 'file') {
+                if (opts && opts.errorLogger) {
+                    opts.errorLogger.apply(null, args);
+                }
+            } else if (global.console) {
                 var logger = global.console[level];
                 if (_isFunction(logger)) {
                     var now = new Date();
@@ -1411,6 +1428,10 @@ var exports = undefined;
             if (_config.logLevel === 'debug') {
                 _log('debug', arguments);
             }
+        };
+
+        this._logError = function() {
+            _log('file', arguments);
         };
 
         function _splitURL(url) {
