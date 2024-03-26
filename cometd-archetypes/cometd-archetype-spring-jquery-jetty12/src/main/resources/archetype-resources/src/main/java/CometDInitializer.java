@@ -7,23 +7,24 @@ import jakarta.servlet.ServletContext;
 import org.cometd.annotation.server.ServerAnnotationProcessor;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.server.BayeuxServerImpl;
-import org.cometd.server.http.JSONPTransport;
-import org.cometd.server.http.JSONTransport;
+import org.cometd.server.http.JSONHttpTransport;
+import org.cometd.server.http.JSONPHttpTransport;
 import org.cometd.server.websocket.jakarta.WebSocketTransport;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
-@Component
+@Configuration
 public class CometDInitializer implements ServletContextAware {
     private ServletContext servletContext;
 
     @Bean(initMethod = "start", destroyMethod = "stop")
     public BayeuxServer bayeuxServer() {
         BayeuxServerImpl bean = new BayeuxServerImpl();
-        bean.setTransports(new WebSocketTransport(bean), new JSONTransport(bean), new JSONPTransport(bean));
+        bean.setTransports(new WebSocketTransport(bean), new JSONHttpTransport(bean), new JSONPHttpTransport(bean));
         servletContext.setAttribute(BayeuxServer.ATTRIBUTE, bean);
         bean.setOption(ServletContext.class.getName(), servletContext);
         bean.setOption("ws.cometdURLMapping", "/cometd/*");

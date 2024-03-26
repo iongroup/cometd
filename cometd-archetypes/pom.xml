@@ -16,9 +16,7 @@
   <modules>
     <module>cometd-archetype-dojo-jetty12</module>
     <module>cometd-archetype-jquery-jetty12</module>
-    <!-- TODO -->
-    <!--    <module>cometd-archetype-spring-dojo-jetty12</module>-->
-    <!--    <module>cometd-archetype-spring-jquery-jetty12</module>-->
+    <module>cometd-archetype-spring-jquery-jetty12</module>
   </modules>
 
   <build>
