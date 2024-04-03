@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2022 the original author or authors.
+ * Copyright (c) 2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.cometd.oort.jakarta;
 
 import jakarta.servlet.ServletConfig;
-
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.oort.Oort;
 import org.cometd.oort.OortComet;

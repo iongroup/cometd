@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2022 the original author or authors.
+ * Copyright (c) 2008 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.cometd.oort;
 import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.util.List;
-
 import org.cometd.oort.jakarta.OortMulticastConfigServlet;
 import org.cometd.oort.jakarta.SetiServlet;
 import org.cometd.server.http.jakarta.CometDServlet;

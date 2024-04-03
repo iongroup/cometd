@@ -448,9 +448,6 @@
           <aggregate>true</aggregate>
           <failIfMissing>true</failIfMissing>
           <strictCheck>true</strictCheck>
-          <properties>
-            <copyright-range>${project.inceptionYear}-2022</copyright-range>
-          </properties>
           <mapping>
             <java>SLASHSTAR_STYLE</java>
           </mapping>
