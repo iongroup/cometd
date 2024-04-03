@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 angular.module('cometd-timestamp', ['cometd'])
     .run(['cometd', function(cometd) {
         cometd.registerExtension('timestamp', new org.cometd.TimeStampExtension());

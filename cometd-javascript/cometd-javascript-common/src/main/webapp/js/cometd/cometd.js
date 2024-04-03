@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 /* CometD Version ${project.version} */
 
 (((root, factory) => {

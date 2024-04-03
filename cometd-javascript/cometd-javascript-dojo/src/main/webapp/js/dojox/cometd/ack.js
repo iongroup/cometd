@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 define(['cometd/AckExtension', 'dojox/cometd'],
     function(AckExtension, cometd) {
         var result = new AckExtension();

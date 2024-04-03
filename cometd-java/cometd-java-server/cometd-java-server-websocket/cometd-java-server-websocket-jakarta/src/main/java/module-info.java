@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 module org.cometd.server.websocket.jakarta {
     exports org.cometd.server.websocket.jakarta;
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 (function(root, factory){
     if (typeof exports === 'object') {
         module.exports = factory(require('./jquery.cometd'), require('cometd/BinaryExtension'));

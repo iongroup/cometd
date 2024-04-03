@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 define(['cometd/BinaryExtension', 'dojox/cometd'],
     function(BinaryExtension, cometd) {
         var result = new BinaryExtension();

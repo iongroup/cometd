@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 define(['cometd/cometd', 'dojo/json', 'dojox', 'dojo/_base/xhr', 'dojo/request/script'],
     function(cometdModule, JSON, dojox, dojoXHR, dojoSCRIPT) {
         function LongPollingTransport() {

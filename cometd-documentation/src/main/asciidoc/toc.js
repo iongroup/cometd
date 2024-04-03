@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 document.addEventListener('DOMContentLoaded', () => dynamicTOC());
 
 function dynamicTOC() {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 (((root, factory) => {
     if (typeof exports === 'object') {
         module.exports = factory(require('./cometd'));
