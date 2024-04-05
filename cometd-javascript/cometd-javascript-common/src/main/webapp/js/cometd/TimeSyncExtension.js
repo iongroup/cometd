@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2008 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /**
  * With each handshake or connect, the extension sends timestamps within the
  * ext field like: <code>{ext:{timesync:{tc:12345567890,l:23,o:4567},...},...}</code>
@@ -38,135 +54,121 @@
  * @param configuration
  */
 export function TimeSyncExtension(configuration) {
-  let _cometd;
-  const _maxSamples = (configuration && configuration.maxSamples) || 10;
-  let _lags = [];
-  let _offsets = [];
-  let _lag = 0;
-  let _offset = 0;
+    let _cometd;
+    const _maxSamples = (configuration && configuration.maxSamples) || 10;
+    let _lags = [];
+    let _offsets = [];
+    let _lag = 0;
+    let _offset = 0;
 
-  function _debug(text, args) {
-    _cometd._debug(text, args);
-  }
+    function _debug(text, args) {
+        _cometd._debug(text, args);
+    }
 
-  this.registered = (name, cometd) => {
-    _cometd = cometd;
-    _debug("TimeSyncExtension: executing registration callback");
-  };
+    this.registered = (name, cometd) => {
+        _cometd = cometd;
+        _debug("TimeSyncExtension: executing registration callback");
+    };
 
-  this.unregistered = () => {
-    _debug("TimeSyncExtension: executing unregistration callback");
-    _cometd = null;
-    _lags = [];
-    _offsets = [];
-  };
+    this.unregistered = () => {
+        _debug("TimeSyncExtension: executing unregistration callback");
+        _cometd = null;
+        _lags = [];
+        _offsets = [];
+    };
 
-  this.incoming = (message) => {
-    const channel = message.channel;
-    if (channel && channel.indexOf("/meta/") === 0) {
-      if (message.ext && message.ext.timesync) {
-        const timesync = message.ext.timesync;
-        _debug("TimeSyncExtension: server sent timesync", timesync);
+    this.incoming = (message) => {
+        const channel = message.channel;
+        if (channel && channel.indexOf("/meta/") === 0) {
+            if (message.ext && message.ext.timesync) {
+                const timesync = message.ext.timesync;
+                _debug("TimeSyncExtension: server sent timesync", timesync);
 
-        const now = new Date().getTime();
-        const l2 = (now - timesync.tc - timesync.p) / 2;
-        const o2 = timesync.ts - timesync.tc - l2;
+                const now = new Date().getTime();
+                const l2 = (now - timesync.tc - timesync.p) / 2;
+                const o2 = timesync.ts - timesync.tc - l2;
 
-        _lags.push(l2);
-        _offsets.push(o2);
-        if (_offsets.length > _maxSamples) {
-          _offsets.shift();
-          _lags.shift();
+                _lags.push(l2);
+                _offsets.push(o2);
+                if (_offsets.length > _maxSamples) {
+                    _offsets.shift();
+                    _lags.shift();
+                }
+
+                const samples = _offsets.length;
+                let lagsSum = 0;
+                let offsetsSum = 0;
+                for (let i = 0; i < samples; ++i) {
+                    lagsSum += _lags[i];
+                    offsetsSum += _offsets[i];
+                }
+                _lag = parseInt((lagsSum / samples).toFixed());
+                _offset = parseInt((offsetsSum / samples).toFixed());
+                _debug("TimeSyncExtension: network lag", _lag, "ms, time offset with server", _offset, "ms", _lag, _offset);
+            }
         }
+        return message;
+    };
 
-        const samples = _offsets.length;
-        let lagsSum = 0;
-        let offsetsSum = 0;
-        for (let i = 0; i < samples; ++i) {
-          lagsSum += _lags[i];
-          offsetsSum += _offsets[i];
+    this.outgoing = (message) => {
+        const channel = message.channel;
+        if (channel && channel.indexOf("/meta/") === 0) {
+            if (!message.ext) {
+                message.ext = {};
+            }
+            message.ext.timesync = {
+                tc: new Date().getTime(),
+                l: _lag,
+                o: _offset,
+            };
+            _debug("TimeSyncExtension: client sending timesync", message.ext.timesync);
         }
-        _lag = parseInt((lagsSum / samples).toFixed());
-        _offset = parseInt((offsetsSum / samples).toFixed());
-        _debug(
-          "TimeSyncExtension: network lag",
-          _lag,
-          "ms, time offset with server",
-          _offset,
-          "ms",
-          _lag,
-          _offset
-        );
-      }
-    }
-    return message;
-  };
+        return message;
+    };
 
-  this.outgoing = (message) => {
-    const channel = message.channel;
-    if (channel && channel.indexOf("/meta/") === 0) {
-      if (!message.ext) {
-        message.ext = {};
-      }
-      message.ext.timesync = {
-        tc: new Date().getTime(),
-        l: _lag,
-        o: _offset,
-      };
-      _debug(
-        "TimeSyncExtension: client sending timesync",
-        message.ext.timesync
-      );
-    }
-    return message;
-  };
+    /**
+     * Get the estimated offset in ms from the clients clock to the
+     * servers clock.  The server time is the client time plus the offset.
+     */
+    this.getTimeOffset = () => _offset;
 
-  /**
-   * Get the estimated offset in ms from the clients clock to the
-   * servers clock.  The server time is the client time plus the offset.
-   */
-  this.getTimeOffset = () => _offset;
+    /**
+     * Get an array of multiple offset samples used to calculate
+     * the offset.
+     */
+    this.getTimeOffsetSamples = () => _offsets;
 
-  /**
-   * Get an array of multiple offset samples used to calculate
-   * the offset.
-   */
-  this.getTimeOffsetSamples = () => _offsets;
+    /**
+     * Get the estimated network lag in ms from the client to the server.
+     */
+    this.getNetworkLag = () => _lag;
 
-  /**
-   * Get the estimated network lag in ms from the client to the server.
-   */
-  this.getNetworkLag = () => _lag;
+    /**
+     * Get the estimated server time in ms since the epoch.
+     */
+    this.getServerTime = () => new Date().getTime() + _offset;
 
-  /**
-   * Get the estimated server time in ms since the epoch.
-   */
-  this.getServerTime = () => new Date().getTime() + _offset;
+    /**
+     *
+     * Get the estimated server time as a Date object
+     */
+    this.getServerDate = function() {
+        return new Date(this.getServerTime());
+    };
 
-  /**
-   *
-   * Get the estimated server time as a Date object
-   */
-  this.getServerDate = function () {
-    return new Date(this.getServerTime());
-  };
-
-  /**
-   * Set a timeout to expire at given time on the server.
-   * @param callback The function to call when the timer expires
-   * @param atServerTimeOrDate a js Time or Date object representing the
-   * server time at which the timeout should expire
-   */
-  this.setTimeout = (callback, atServerTimeOrDate) => {
-    const ts =
-      atServerTimeOrDate instanceof Date
-        ? atServerTimeOrDate.getTime()
-        : 0 + atServerTimeOrDate;
-    const tc = ts - _offset;
-    let interval = tc - new Date().getTime();
-    if (interval <= 0) {
-      interval = 1;
-    }
-    return _cometd.setTimeout(callback, interval);
-  };
+    /**
+     * Set a timeout to expire at given time on the server.
+     * @param callback The function to call when the timer expires
+     * @param atServerTimeOrDate a js Time or Date object representing the
+     * server time at which the timeout should expire
+     */
+    this.setTimeout = (callback, atServerTimeOrDate) => {
+        const ts = atServerTimeOrDate instanceof Date ? atServerTimeOrDate.getTime() : 0 + atServerTimeOrDate;
+        const tc = ts - _offset;
+        let interval = tc - new Date().getTime();
+        if (interval <= 0) {
+            interval = 1;
+        }
+        return _cometd.setTimeout(callback, interval);
+    };
 }

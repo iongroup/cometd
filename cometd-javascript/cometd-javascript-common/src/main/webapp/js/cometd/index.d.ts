@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-
 export interface Transport {
     readonly type: string;
     url: string;
+
     accept(version: string, crossDomain: boolean, url: string): boolean;
 }
 
@@ -34,8 +34,8 @@ export interface TransportRegistry {
 export interface Advice {
     interval?: number;
     maxInterval?: number;
-    'multiple-clients'?: boolean;
-    reconnect?: 'retry' | 'handshake' | 'none';
+    "multiple-clients"?: boolean;
+    reconnect?: "retry" | "handshake" | "none";
     timeout?: number;
     hosts?: string[];
 }
@@ -60,7 +60,7 @@ export interface Message {
 
 export type Callback = (message: Message) => void;
 
-export type LogLevel = 'warn' | 'info' | 'debug';
+export type LogLevel = "warn" | "info" | "debug";
 
 export interface Configuration {
     url: string;
@@ -88,7 +88,7 @@ export interface ListenerHandle {
 export interface SubscriptionHandle {
 }
 
-export type Status = 'disconnected' | 'handshaking' | 'connecting' | 'connected' | 'disconnecting';
+export type Status = "disconnected" | "handshaking" | "connecting" | "connected" | "disconnecting";
 
 export interface Extension {
     incoming?(message: Message): Message | null;
