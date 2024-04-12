@@ -54,35 +54,32 @@ import org.slf4j.LoggerFactory;
  * <p>Processes annotations in server-side service objects.</p>
  * <p>Service objects must be annotated with {@link Service} at class level to be processed by this processor,
  * for example:</p>
- * <pre>
- * &#64;Service
- * public class MyService
- * {
- *     &#64;Session
+ * <pre>{@code
+ * @Service
+ * public class MyService {
+ *     @Session
  *     private ServerSession session;
  *
- *     &#64;Configure("/foo")
- *     public void configureFoo(ConfigurableServerChannel channel)
- *     {
+ *     @Configure("/foo")
+ *     public void configureFoo(ConfigurableServerChannel channel) {
  *         channel.setPersistent(...);
  *         channel.addListener(...);
  *         channel.addAuthorizer(...);
  *     }
  *
- *     &#64;Listener("/foo")
- *     public void handleFooMessages(ServerSession remote, ServerMessage.Mutable message)
- *     {
+ *     @Listener("/foo")
+ *     public void handleFooMessages(ServerSession remote, ServerMessage.Mutable message) {
  *         // Do something
  *     }
  * }
- * </pre>
+ * }</pre>
  * <p>The processor is used in this way:</p>
- * <pre>
+ * <pre>{@code
  * BayeuxServer bayeux = ...;
- * ServerAnnotationProcessor processor = ServerAnnotationProcessor.get(bayeux);
+ * ServerAnnotationProcessor processor = new ServerAnnotationProcessor(bayeux);
  * MyService s = new MyService();
  * processor.process(s);
- * </pre>
+ * }</pre>
  */
 public class ServerAnnotationProcessor extends AnnotationProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerAnnotationProcessor.class);
@@ -705,7 +702,7 @@ public class ServerAnnotationProcessor extends AnnotationProcessor {
                 caller.failure(failure);
                 Class<?> klass = target.getClass();
                 Logger logger = LoggerFactory.getLogger(klass);
-                logger.info("Exception while invoking " + klass + "#" + method.getName() + "()", x);
+                logger.info("Exception while invoking {}#{}()", klass, method.getName(), x);
                 return true;
             }
         }

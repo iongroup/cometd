@@ -325,9 +325,9 @@ public class ChannelId {
      * the variable(s) defined in this template with the values of the segments defined by
      * the target {@code ChannelId}.</p>
      * <p>For example:</p>
-     * <pre>
+     * <pre>{@code
      * // template and target match.
-     * Map&lt;String, String&gt; bindings = new ChannelId("/a/{var1}/c/{var2}").bind(new ChannelId("/a/foo/c/bar"));
+     * Map<String, String> bindings = new ChannelId("/a/{var1}/c/{var2}").bind(new ChannelId("/a/foo/c/bar"));
      * bindings: {"var1": "foo", "var2": "bar"}
      *
      * // template has 2 segments, target has only 1 segment.
@@ -341,11 +341,11 @@ public class ChannelId {
      * // same number of segments, but no match on non-variable segments.
      * bindings = new ChannelId("/a/{var1}").bind(new ChannelId("/b/c"))
      * bindings = {}
-     * </pre>
+     * }</pre>
      * <p>The returned map may not preserve the order of variables present in the template {@code ChannelId}.</p>
      *
      * @param target the non-wild, non-template {@code ChannelId} to bind
-     * @return a map withe the bindings, or an empty map if no binding was possible
+     * @return a map with the bindings, or an empty map if no binding was possible
      * @see #isTemplate()
      */
     public Map<String, String> bind(ChannelId target) {

@@ -55,12 +55,12 @@ public interface Promise<C> {
      * <p>Returns a {@code BiConsumer} that, when invoked,
      * completes this Promise.</p>
      * <p>Typical usage is with {@code CompletableFuture}:</p>
-     * <pre>
-     * public void process(ServerMessage message, Promise&lt;Boolean&gt; promise) {
-     *     CompletableFuture.supplyAsync(() -&gt; asyncOperation(message))
+     * <pre>{@code
+     * public void process(ServerMessage message, Promise<Boolean> promise) {
+     *     CompletableFuture.supplyAsync(() -> asyncOperation(message))
      *             .whenComplete(promise.complete());
      * }
-     * </pre>
+     * }</pre>
      *
      * @return a BiConsumer that completes this Promise
      * @see Completable

@@ -19,7 +19,7 @@ package org.cometd.oort;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * The equivalent of an {@code OortMap&lt;String,V&gt;}.
+ * The equivalent of an {@code OortMap<String, V>}.
  *
  * @param <V> the value type
  */

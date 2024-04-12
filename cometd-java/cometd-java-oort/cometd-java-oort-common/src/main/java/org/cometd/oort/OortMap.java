@@ -41,9 +41,9 @@ import org.slf4j.LoggerFactory;
  * their business logic.</p>
  * <p>The type parameter for keys, {@code K}, must be a String to be able to use this class as-is,
  * although usage of {@link OortStringMap} is preferred.
- * This is due to the fact that a {@code Map&lt;Long,Object&gt;} containing an entry {@code {13:"foo"}}
+ * This is due to the fact that a {@code Map<Long,Object>} containing an entry {@code {13:"foo"}}
  * is serialized in JSON as {@code {"13":"foo"}} because JSON field names must always be strings.
- * When deserialized, it is restored as a {@code Map&lt;String,Object&gt;}, which is incompatible
+ * When deserialized, it is restored as a {@code Map<String,Object>}, which is incompatible
  * with the original type parameter for keys.
  * To overcome this issue, subclasses may override {@link #serialize(Object)} and
  * {@link #deserialize(Object)}.
@@ -189,7 +189,11 @@ public abstract class OortMap<K, V> extends OortContainer<ConcurrentMap<K, V>> {
      * @see #find(Object)
      */
     public V get(K key) {
-        return getInfo(getOort().getURL()).getObject().get(key);
+        Info<ConcurrentMap<K, V>> info = getInfo(getOort().getURL());
+        if (info == null) {
+            return null;
+        }
+        return info.getObject().get(key);
     }
 
     /**

@@ -88,7 +88,7 @@ public class AcknowledgedMessagesExtension implements Extension {
      *   <li>{@link #onBatchReceive(ServerSession, long)}, when the client session confirms it has received a batch of messages</li>
      * </ul>
      * <p>Stateful implementations may use {@link ServerSession#setAttribute(String, Object)}
-     * to store per-session data, or a {@code Map&lt;ServerSession, ?&gt;}</p>
+     * to store per-session data, or a {@code Map<ServerSession, ?>}</p>
      */
     public interface Listener {
         /**

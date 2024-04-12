@@ -156,7 +156,7 @@ In the `OortStringMap` example above, the data entity is a `ConcurrentMap<String
 While the `OortObject` implementation is able to serialize a `ConcurrentMap` to JSON natively (because `ConcurrentMap` is a `Map` and therefore has a native representation as a JSON object), it usually cannot serialize `UserInfo` instances correctly (by default, CometD just calls `toString()` to convert such non natively representable objects to JSON).
 
 In order to serialize correctly instances of `UserInfo`, you must configure Oort as explained in xref:_java_json_oort_config[the Oort JSON configuration section].
-This is done by creating a custom implementation of `JSONContent.Client`:
+This is done by creating a custom implementation of `JSONContext.Client`:
 
 [source,java,indent=0]
 ----

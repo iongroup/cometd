@@ -91,23 +91,23 @@ import org.slf4j.LoggerFactory;
  * and set the new entity value in the part that corresponds to the node that changed the entity.
  * The diagram below shows one oort object with name "user_count" in two nodes.
  * On the left of the arrow (A), the situation before calling:</p>
- * <pre>
- * userCount1.setAndShare(17, result -&gt; { ... });
- * </pre>
+ * <pre>{@code
+ * userCount1.setAndShare(17, result -> { ... });
+ * }</pre>
  * <p>and on the right of the arrow (A) the situation afterwards, that shows how the value is first changed
  * (1) locally on {@code node_1}, then a message (2) is broadcast on the cluster, reaches
  * {@code node_2}, where it updates (3) the part corresponding to {@code node_1} to the new value.</p>
- * <pre>
+ * <pre>{@code
  * +-------------+  +-------------+         +-----------------+       +-----------------+
  * |   node_1    |  |   node_2    |         |     node_1      |       |     node_2      |
  * +-------------+  +-------------+         +-----------------+  (2)  +-----------------+
- * | user_count  |  | user_count  |   (A)   |   user_count    | ----&gt; |   user_count    |
- * +--------+----+  +--------+----+  ----&gt;  +--------+--------+       +--------+--------+
+ * | user_count  |  | user_count  |   (A)   |   user_count    | ----> |   user_count    |
+ * +--------+----+  +--------+----+  ---->  +--------+--------+       +--------+--------+
  * | local  | 13 |  | local  | 19 |         | local  | 17 (1) |       | local  | 19     |
  * +--------+----+  +--------+----+         +--------+--------+       +--------+--------+
  * | remote | 19 |  | remote | 13 |         | remote | 19     |       | remote | 17 (3) |
  * +--------+----+  +-------+----+          +--------+--------+       +-------+---------+
- * </pre>
+ * }</pre>
  * <p>When an entity is updated, either locally or remotely, an event is fired to registered {@link Listener}s.</p>
  * <p>Oort objects can only update the entity they own; in the example above, {@code node_1} can only update
  * the "local" value 13 to 17, but cannot modify the "remote" value 19, which is owned by {@code node_2}.
@@ -246,7 +246,7 @@ public class OortObject<T> extends AbstractLifeCycle implements ConfigurableServ
 
     /**
      * Returns the channel name used by this oort object for communication with other oort objects in other nodes.
-     * The channel is of the form "/oort/objects/&lt;name&gt;" where &lt;name&gt; is this oort object's
+     * The channel is of the form {@code /oort/objects/<name>} where {@code <name>} is this oort object's
      * {@link #getName() name}.
      *
      * @return the channel name used by this oort object
@@ -466,18 +466,13 @@ public class OortObject<T> extends AbstractLifeCycle implements ConfigurableServ
     }
 
     private ObjectPart part(String oortURL) {
-        ObjectPart part = parts.get(oortURL);
-        if (part == null) {
-            part = new ObjectPart();
-            ObjectPart existing = parts.putIfAbsent(oortURL, part);
+        return parts.computeIfAbsent(oortURL, k -> {
+            ObjectPart part = new ObjectPart();
             if (logger.isDebugEnabled()) {
-                logger.debug("Created part {} for {}{}", part, oortURL, existing != null ? ", existing " + existing : "");
+                logger.debug("Created part {} for {}", part, oortURL);
             }
-            if (existing != null) {
-                part = existing;
-            }
-        }
-        return part;
+            return part;
+        });
     }
 
     protected void pushInfo(String oortURL, Map<String, Object> fields) {

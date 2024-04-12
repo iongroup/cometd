@@ -78,12 +78,7 @@ public abstract class OortContainer<T> extends OortObject<T> {
     }
 
     private Updater updater(String oortURL) {
-        Updater updater = updaters.get(oortURL);
-        if (updater == null) {
-            updater = new Updater();
-            updaters.put(oortURL, updater);
-        }
-        return updater;
+        return updaters.computeIfAbsent(oortURL, k -> new Updater());
     }
 
     private void process(Info<T> info, Updater updater) {

@@ -74,7 +74,11 @@ public class OortList<E> extends OortContainer<List<E>> {
      * @return true if the {@code element} is contained in the local entity list, false otherwise
      */
     public boolean contains(E element) {
-        return getInfo(getOort().getURL()).getObject().contains(element);
+        Info<List<E>> info = getInfo(getOort().getURL());
+        if (info == null) {
+            return false;
+        }
+        return info.getObject().contains(element);
     }
 
     /**

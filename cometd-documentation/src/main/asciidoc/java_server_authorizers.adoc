@@ -45,7 +45,7 @@ The complete algorithm for the authorization follows:
 
 The order in which the authorizers are called is not important.
 
-You need to imnplement `org.cometd.bayeux.server.Authorizer` with your authorization algorithm.
+You need to implement `org.cometd.bayeux.server.Authorizer` with your authorization algorithm.
 
 One of three possible results must be used as the result of the authorization:
 
