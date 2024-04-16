@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.ChannelId;
 import org.cometd.bayeux.Message;
@@ -621,8 +620,8 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
     }
 
     public void cancelExpiration(boolean metaConnect) {
-        long now = System.nanoTime();
         synchronized (getLock()) {
+            long now = System.nanoTime();
             _messageTime = now;
             if (metaConnect) {
                 // A /meta/connect was received and possibly
@@ -633,7 +632,11 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
                 // the client, and another message was
                 // received, so extend the expiration.
                 long maxInterval = calculateMaxInterval(getServerTransport().getMaxInterval());
-                _expireTime = Math.max(_expireTime, now + TimeUnit.MILLISECONDS.toNanos(maxInterval));
+                _expireTime = now + TimeUnit.MILLISECONDS.toNanos(maxInterval);
+                if (_expireTime == 0) {
+                    // Avoid zero because it has a special meaning in sweep().
+                    _expireTime = 1;
+                }
             }
         }
         if (_logger.isDebugEnabled()) {
