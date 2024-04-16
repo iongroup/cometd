@@ -670,9 +670,9 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
     }
 
     public void cancelExpiration(boolean metaConnect) {
-        long now = NanoTime.now();
         lock.lock();
         try {
+            long now = System.nanoTime();
             _messageNanos = now;
             if (metaConnect) {
                 // A /meta/connect was received and possibly
@@ -683,7 +683,11 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
                 // the client, and another message was
                 // received, so extend the expiration.
                 long maxInterval = calculateMaxInterval(getServerTransport().getMaxInterval());
-                _expireNanos = Math.max(_expireNanos, now + TimeUnit.MILLISECONDS.toNanos(maxInterval));
+                _expireNanos = now + TimeUnit.MILLISECONDS.toNanos(maxInterval);
+                if (_expireNanos == 0) {
+                    // Avoid zero because it has a special meaning in sweep().
+                    _expireNanos = 1;
+                }
             }
         } finally {
             lock.unlock();
