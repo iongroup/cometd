@@ -654,7 +654,6 @@ public abstract class AbstractHttpTransport extends AbstractServerTransport {
      * <p>A {@link Scheduler} for HTTP-based transports.</p>
      */
     public interface HttpScheduler extends Scheduler {
-        ServerMessage.Mutable getMessage();
     }
 
     // TODO: coalesce with AbstractHttpScheduler

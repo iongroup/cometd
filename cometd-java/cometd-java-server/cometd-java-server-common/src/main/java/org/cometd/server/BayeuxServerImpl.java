@@ -1594,7 +1594,7 @@ public class BayeuxServerImpl extends ContainerLifeCycle implements BayeuxServer
                         long now = NanoTime.now();
                         sweeperInfo.transportSweepDuration = NanoTime.millisElapsed(previousNanoTime.getAndSet(now), now);
                         if (_logger.isDebugEnabled()) {
-                            _logger.debug("Swept transports, took {}ms", sweeperInfo.transportSweepDuration);
+                            _logger.debug("Swept transports in {}ms", sweeperInfo.transportSweepDuration);
                         }
                         return runAsync(_channels.values(), serverChannel -> {
                             if (serverChannel.sweep()) {

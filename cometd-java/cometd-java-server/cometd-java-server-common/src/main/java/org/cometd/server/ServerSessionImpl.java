@@ -586,7 +586,8 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
                         // up and scheduled session expiration,
                         // but here we are suspending, so we must
                         // be sure session expiration is cancelled.
-                        cancelExpiration(true);
+                        boolean metaConnect = Channel.META_CONNECT.equals(newScheduler.getMessage().getChannel());
+                        cancelExpiration(metaConnect);
                     }
                 } else {
                     oldScheduler = newScheduler;
@@ -711,6 +712,10 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
             long currentMetaConnectCycle = getMetaConnectCycle();
             if (metaConnectCycle == 0 || metaConnectCycle == currentMetaConnectCycle) {
                 _expireNanos = now + TimeUnit.MILLISECONDS.toNanos(interval + maxInterval);
+                if (_expireNanos == 0) {
+                    // Avoid zero because it has a special meaning in sweep().
+                    _expireNanos = 1;
+                }
                 if (_logger.isDebugEnabled()) {
                     _logger.debug("Scheduled expiration for {}", this);
                 }

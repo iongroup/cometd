@@ -165,8 +165,8 @@ public abstract class AbstractWebSocketEndPoint {
             }
         } else {
             if (session != null && session.updateServerEndPoint(this)) {
-                // Install a scheduler for the current endpoint, so that server-side
-                // messages can be delivered without waiting for a /meta/connect.
+                // Install a temporary scheduler for the current endpoint, so that server
+                // side messages can be delivered without waiting for a /meta/connect.
                 session.setScheduler(new WebSocketScheduler(context, message, 0));
             }
             if (Channel.META_CONNECT.equals(channel)) {
@@ -324,6 +324,11 @@ public abstract class AbstractWebSocketEndPoint {
         }
 
         @Override
+        public ServerMessage.Mutable getMessage() {
+            return message;
+        }
+
+        @Override
         public long getMetaConnectCycle() {
             return context.metaConnectCycle;
         }
@@ -331,11 +336,21 @@ public abstract class AbstractWebSocketEndPoint {
         @Override
         public void schedule() {
             ServerSessionImpl session = context.session;
-            boolean metaConnectDelivery = isMetaConnectDeliveryOnly(session);
-            // When delivering only via /meta/connect, we want to behave similarly to HTTP.
-            // Otherwise, the scheduler is not "disabled" by cancelling the
-            // timeout, and it will continue to deliver messages to the client.
-            if (metaConnectDelivery || session.isTerminated()) {
+            boolean metaConnectDeliveryOnly = isMetaConnectDeliveryOnly(session);
+            boolean metaConnect = Channel.META_CONNECT.equals(message.getChannel());
+
+            if (!metaConnect && metaConnectDeliveryOnly) {
+                // We cannot deliver the messages yet, as it must be
+                // done via /meta/connect, but we do not have one.
+                if (_logger.isDebugEnabled()) {
+                    _logger.debug("Delaying messages send (/meta/connect delivery) {} for {} on {}", message, session, AbstractWebSocketEndPoint.this);
+                }
+                return;
+            }
+
+            // When delivering only via /meta/connect, we want to behave similarly
+            // to HTTP, i.e. disabling the scheduler between /meta/connect messages.
+            if (metaConnect && (metaConnectDeliveryOnly || session.isTerminated())) {
                 if (cancelTimeout(false)) {
                     if (_logger.isDebugEnabled()) {
                         _logger.debug("Resuming suspended {} for {} on {}", message, session, AbstractWebSocketEndPoint.this);
@@ -343,15 +358,19 @@ public abstract class AbstractWebSocketEndPoint {
                     session.notifyResumed(message, false);
                     resume(context, message, this);
                 }
-            } else {
-                // Avoid sending messages if this scheduler has been disabled, so that the
-                // messages remain in the session queue until the next scheduler is set.
-                if (taskRef.isMarked()) {
-                    Context ctx = new Context(session);
-                    ctx.sendQueue = true;
-                    ctx.metaConnectCycle = context.metaConnectCycle;
-                    flush(ctx);
+                return;
+            }
+
+            // Avoid sending messages if this scheduler has been disabled, so that the
+            // messages remain in the session queue until the next scheduler is set.
+            if (taskRef.isMarked()) {
+                Context ctx = new Context(session);
+                ctx.sendQueue = true;
+                ctx.metaConnectCycle = context.metaConnectCycle;
+                if (_logger.isDebugEnabled()) {
+                    _logger.debug("Flushing messages {} for {} on {}", message, session, AbstractWebSocketEndPoint.this);
                 }
+                flush(ctx);
             }
         }
 
@@ -431,12 +450,13 @@ public abstract class AbstractWebSocketEndPoint {
 
         @Override
         public String toString() {
-            return String.format("%s@%x[cycle=%d,%s@%x]",
+            return String.format("%s@%x[%s@%x,cycle=%d,message=%s]",
                     getClass().getSimpleName(),
                     hashCode(),
-                    getMetaConnectCycle(),
                     AbstractWebSocketEndPoint.this.getClass().getSimpleName(),
-                    AbstractWebSocketEndPoint.this.hashCode());
+                    AbstractWebSocketEndPoint.this.hashCode(),
+                    getMetaConnectCycle(),
+                    getMessage());
         }
     }
 
