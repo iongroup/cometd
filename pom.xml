@@ -91,7 +91,7 @@
   <properties>
     <graalvm-version>24.0.1</graalvm-version>
     <jackson-version>2.17.0</jackson-version>
-    <jakarta-servlet-version>6.0.0</jakarta-servlet-version>
+    <jakarta-ee-version>10.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
     <jetty-version>12.0.8</jetty-version>
     <!-- end::jetty-version[] -->
@@ -107,15 +107,11 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>jakarta.annotation</groupId>
-        <artifactId>jakarta.annotation-api</artifactId>
-        <!-- Must stay at 2.0.x for Jakarta EE 9 -->
-        <version>2.1.1</version>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.inject</groupId>
-        <artifactId>jakarta.inject-api</artifactId>
-        <version>2.0.1</version>
+        <groupId>jakarta.platform</groupId>
+        <artifactId>jakarta.jakartaee-bom</artifactId>
+        <version>${jakarta-ee-version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty.toolchain</groupId>
@@ -126,24 +122,6 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${slf4j-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.servlet</groupId>
-        <artifactId>jakarta.servlet-api</artifactId>
-        <version>${jakarta-servlet-version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.websocket</groupId>
-        <artifactId>jakarta.websocket-api</artifactId>
-        <version>2.1.1</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.websocket</groupId>
-        <artifactId>jakarta.websocket-client-api</artifactId>
-        <version>2.1.1</version>
-        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>com.google.inject</groupId>

@@ -7,8 +7,8 @@
     <requiredProperty key="jetty-version">
       <defaultValue>${jetty-version}</defaultValue>
     </requiredProperty>
-    <requiredProperty key="jakarta-servlet-version">
-      <defaultValue>${jakarta-servlet-version}</defaultValue>
+    <requiredProperty key="jakarta-ee-version">
+      <defaultValue>${jakarta-ee-version}</defaultValue>
     </requiredProperty>
     <requiredProperty key="maven-compiler-plugin-version">
       <defaultValue>${maven-compiler-plugin-version}</defaultValue>

@@ -10,9 +10,7 @@
   <version>${version}</version>
 
   <properties>
-    <cometd-version>${cometd-version}</cometd-version>
-    <jetty-version>${jetty-version}</jetty-version>
-    <spring-version>${spring-version}</spring-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <build>
@@ -58,11 +56,22 @@
     </plugins>
   </build>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>jakarta.platform</groupId>
+        <artifactId>jakarta.jakartaee-bom</artifactId>
+        <version>${jakarta-ee-version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
-      <version>${jakarta-servlet-version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

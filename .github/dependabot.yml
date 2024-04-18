@@ -48,6 +48,9 @@ updates:
     target-branch: "8.0.x"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "jakarta.platform:jakarta.jakartaee-bom"
+        versions: [ ">=11.0.0" ]
 
   - package-ecosystem: "github-actions"
     directory: "/"
