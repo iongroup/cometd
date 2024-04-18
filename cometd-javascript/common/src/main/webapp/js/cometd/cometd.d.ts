@@ -86,20 +86,15 @@ export interface ListenerHandle {
 }
 
 export interface SubscriptionHandle {
-    id: number;
-    channel: string;
-    listener: boolean;
-    callback: Callback;
-    scope?: any;
 }
 
 export type Status = 'disconnected' | 'handshaking' | 'connecting' | 'connected' | 'disconnecting';
 
 export interface Extension {
-    incoming?(message: Message): Message | null | undefined;
-    outgoing?(message: Message): Message | null | undefined;
-    registered?:((name: string, cometd: CometD) => void) | undefined;
-    unregistered?:(() => void) | undefined;
+    incoming?(message: Message): Message | null;
+    outgoing?(message: Message): Message | null;
+    registered?(name: string, cometd: CometD): void;
+    unregistered?(): void;
 }
 
 export class CometD {
