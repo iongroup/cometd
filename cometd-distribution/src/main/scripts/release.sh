@@ -42,8 +42,7 @@ COMETD_JS_DIR=${COMETD_DIR}/target/release/cometd-javascript
 git clone --branch 8.0.x git@github.com:cometd/cometd-javascript.git ${COMETD_JS_DIR}
 
 COMETD_JS_SOURCE=${COMETD_DIR}/cometd-javascript/cometd-javascript-common/target/cometd-javascript-common-${VERSION}/js
-cp -v ${COMETD_JS_SOURCE}/cometd/cometd.js ${COMETD_JS_DIR}
-cp -v ${COMETD_JS_SOURCE}/cometd/*Extension.js ${COMETD_JS_DIR}
+cp -v ${COMETD_JS_SOURCE}/cometd/*.js ${COMETD_JS_DIR}
 cp -v ${COMETD_JS_SOURCE}/cometd/cometd.d.ts ${COMETD_JS_DIR}
 
 cd ${COMETD_JS_DIR}
@@ -63,7 +62,7 @@ cat <<EOF > ${COMETD_JS_DIR}/package.json
   "types": "cometd.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cometd/cometd.git"
+    "url": "https://github.com/cometd/cometd-javascript.git"
   }
 }
 EOF
@@ -73,7 +72,7 @@ git commit -m "Release ${VERSION}."
 git tag -am "Release ${VERSION}." ${VERSION}
 git push --follow-tags
 
-# TODO: restore when 8.0.0 is final (and remove from 7.0.x).
-#if yes_no "Publish to NPM ? (Y/n)" y; then
-#  npm publish
-#fi
+# TODO: remove beta when 8.0.0 is final (and update 7.0.x to keep 8.0.x as latest).
+if yes_no "Publish to NPM ? (Y/n)" y; then
+  npm publish --tag beta
+fi
