@@ -1,6 +1,6 @@
 {
   "name": "@ionweb/cometd",
-  "version": "7.0.12-d1",
+  "version": "7.0.13-d1",
   "description": "Welcome to the [CometD](http://cometd.org) Project, a scalable comet (server push) implementation for the web.",
   "main": "dist/cometd-all.js",
   "publishConfig": {
@@ -14,9 +14,9 @@
     "build": "grunt build"
   },
   "devDependencies": {
-    "grunt": "1.3.0",
-    "grunt-contrib-concat": "1.0.1",
-    "grunt-contrib-uglify": "5.0.0",
+    "grunt": "1.6.1",
+    "grunt-contrib-concat": "2.1.0",
+    "grunt-contrib-uglify": "5.2.2",
     "grunt-umd": "3.0.0"
   }
 }
