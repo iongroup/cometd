@@ -1370,7 +1370,7 @@
      * The default name is the string 'default'.
      * @param name the optional name of this cometd object
      */
-    function CometD(name) {
+    function CometD(name, opts) {
         const _scheduler = new Scheduler();
         const _cometd = this;
         const _name = name || 'default';
