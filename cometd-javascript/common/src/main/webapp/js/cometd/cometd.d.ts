@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-export interface Transport {
+export abstract class Transport {
     readonly type: string;
     url: string;
     accept(version: string, crossDomain: boolean, url: string): boolean;
     abort(): void;
+
+    static derive<T extends Transport>(base: T): T;
+}
+
+export class LongPollingTransport extends Transport {
+    xhrSend: (packet: unknown) => void;
+}
+
+export class WebSocketTransport extends Transport {
+    onStat: (event: { tx: number, rx: number }) => void;
+    webSocketConnected: boolean;
 }
 
 export interface TransportRegistry {
@@ -40,14 +51,22 @@ export interface Advice {
     hosts?: string[];
 }
 
-export interface Message {
+export interface Failure extends Advice {
+    connectionType?: string;
+    reason?: string;
+    httpCode?: string;
+    websocketCode?: string;
+}
+
+export interface Message<T = any> {
     advice?: Advice;
     channel: string;
     clientId?: string;
     connectionType?: string;
-    data?: any;
+    data?: T;
     error?: string;
     ext?: object;
+    failure?: Failure;
     id?: string;
     minimumVersion?: string;
     reestablish?: boolean;
@@ -58,7 +77,7 @@ export interface Message {
     version?: string;
 }
 
-export type Callback = (message: Message) => void;
+export type Callback<T = any> = (message: Message<T>) => void;
 
 export type LogLevel = 'warn' | 'info' | 'debug';
 
@@ -80,6 +99,7 @@ export interface Configuration {
     maxURILength?: number;
     maxSendBayeuxMessageSize?: number;
     advice?: Advice;
+    rearmNetworkDelayAfterMessage?: boolean;
 }
 
 export interface ListenerHandle {
@@ -98,7 +118,7 @@ export interface Extension {
 }
 
 export class CometD {
-    constructor(name?: string);
+    constructor(name?: string, opts?: object);
 
     registerTransport(type: string, transport: Transport, index?: number): boolean;
 
@@ -122,14 +142,14 @@ export class CometD {
 
     batch(group: () => void): void;
 
-    addListener(channel: string, messageCallback: Callback): ListenerHandle;
+    addListener<T = any>(channel: string, messageCallback: Callback<T>): ListenerHandle;
 
     removeListener(handle: ListenerHandle): void;
 
     clearListeners(): void;
 
-    subscribe(channel: string, messageCallback: Callback, subscribeCallback?: Callback): SubscriptionHandle;
-    subscribe(channel: string, messageCallback: Callback, subscribeProps: object, subscribeCallback?: Callback): SubscriptionHandle;
+    subscribe<T = any>(channel: string, messageCallback: Callback<T>, subscribeCallback?: Callback<T>): SubscriptionHandle;
+    subscribe<T = any>(channel: string, messageCallback: Callback<T>, subscribeProps: object, subscribeCallback?: Callback<T>): SubscriptionHandle;
 
     unsubscribe(handle: SubscriptionHandle, unsubscribeCallback?: Callback): void;
     unsubscribe(handle: SubscriptionHandle, unsubscribeProps: object, unsubscribeCallback?: Callback): void;
@@ -191,6 +211,8 @@ export class CometD {
     reload?(): void;
 
     websocketEnabled?: boolean;
+
+    onListenerException: (err: Error) => void;
 }
 
 export type Bytes = number[] | ArrayBuffer | DataView |
@@ -202,19 +224,4 @@ export interface Z85 {
     encode(bytes: Bytes): string;
 
     decode(string: string): ArrayBuffer;
-}
-
-export class AckExtension implements Extension {
-}
-
-export class BinaryExtension implements Extension {
-}
-
-export class ReloadExtension implements Extension {
-}
-
-export class TimeStampExtension implements Extension {
-}
-
-export class TimeSyncExtension implements Extension {
 }
