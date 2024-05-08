@@ -1025,7 +1025,7 @@
                 if (_sameContext(context)) {
                     _connecting = null;
                     _context = context;
-                    _self._webSocketConnected = true;
+                    _self.webSocketConnected = true;
                     this.onOpen(context);
                 } else {
                     // We have a valid connection already, close this one.
@@ -1068,12 +1068,12 @@
         const createRearmableTimeout = (handler, delay) => {
             let timeout = { };
             timeout.clear = () => {
-                timeout.timeout && this.clearTimeout(timeout.timeout);
+                timeout.timeout && _self.clearTimeout(timeout.timeout);
                 timeout.timeout = null;
             };
             timeout.rearm = () => {
                 timeout.clear();
-                timeout.timeout = this.setTimeout(() => {
+                timeout.timeout = _self.setTimeout(() => {
                     handler();
                 }, delay);
             };
@@ -1339,7 +1339,7 @@
      * The default name is the string 'default'.
      * @param name the optional name of this cometd object
      */
-    function CometD(name) {
+    function CometD(name, opts) {
         const _scheduler = new Scheduler();
         const _cometd = this;
         const _name = name || 'default';
