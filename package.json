@@ -1,6 +1,6 @@
 {
     "name": "@ionweb/cometd",
-    "version": "7.0.13-d3",
+    "version": "7.0.13-d4",
     "description": "Welcome to the [CometD](http://cometd.org) Project, a scalable comet (server push) implementation for the web.",
     "main": "cometd-javascript/common/src/main/webapp/js/cometd/cometd.js",
     "exports": {
