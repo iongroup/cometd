@@ -47,47 +47,58 @@ public class AcknowledgeExtensionTest extends AbstractBayeuxClientServerTest {
         startServer(transport, null);
         bayeux.addExtension(new AcknowledgedMessagesExtension());
 
-        Request handshake = newBayeuxRequest("[{" +
-                                             "\"channel\": \"/meta/handshake\"," +
-                                             "\"version\": \"1.0\"," +
-                                             "\"minimumVersion\": \"1.0\"," +
-                                             "\"supportedConnectionTypes\": [\"long-polling\"]," +
-                                             "\"ext\": { \"ack\": true }" +
-                                             "}]");
+        Request handshake = newBayeuxRequest("""
+                [{
+                "id": "0",
+                "channel": "/meta/handshake",
+                "version": "1.0",
+                "minimumVersion": "1.0",
+                "supportedConnectionTypes": ["long-polling"],
+                "ext": { "ack": true }
+                }]
+                """);
         ContentResponse response = handshake.send();
         Assertions.assertEquals(200, response.getStatus());
 
         String clientId = extractClientId(response);
 
-        Request connect = newBayeuxRequest("[{" +
-                                           "\"channel\": \"/meta/connect\"," +
-                                           "\"clientId\": \"" + clientId + "\"," +
-                                           "\"connectionType\": \"long-polling\"," +
-                                           "\"ext\": { \"ack\": -1 }" +
-                                           "}]");
+        Request connect = newBayeuxRequest("""
+                [{
+                "id": "1",
+                "channel": "/meta/connect",
+                "clientId": "%s",
+                "connectionType": "long-polling",
+                "ext": { "ack": -1 }
+                }]
+                """.formatted(clientId));
         response = connect.send();
         Assertions.assertEquals(200, response.getStatus());
 
         String channel = "/foo";
-        Request subscribe = newBayeuxRequest("[{" +
-                                             "\"channel\": \"/meta/subscribe\"," +
-                                             "\"clientId\": \"" + clientId + "\"," +
-                                             "\"subscription\": \"" + channel + "\"" +
-                                             "}]");
+        Request subscribe = newBayeuxRequest("""
+                [{
+                "id": "2",
+                "channel": "/meta/subscribe",
+                "clientId": "%s",
+                "subscription": "%s"
+                }]
+                """.formatted(clientId, channel));
         response = subscribe.send();
         Assertions.assertEquals(200, response.getStatus());
 
-        connect = newBayeuxRequest("[{" +
-                                   "\"channel\": \"/meta/connect\"," +
-                                   "\"clientId\": \"" + clientId + "\"," +
-                                   "\"connectionType\": \"long-polling\"," +
-                                   "\"ext\": { \"ack\": 0 }" +
-                                   "}]");
+        connect = newBayeuxRequest("""
+                [{
+                "id": "3",
+                "channel": "/meta/connect",
+                "clientId": "%s",
+                "connectionType": "long-polling",
+                "ext": { "ack": 0 }
+                }]""".formatted(clientId));
         connect.send(null);
         // Wait for the long poll.
         Thread.sleep(1000);
 
-        // Stop the connector so a server-side publish will get lost.
+        // Stop the connector so a server-side publish will not be delivered.
         int port = connector.getLocalPort();
         connector.stop();
         // Wait to process the close.
@@ -95,13 +106,13 @@ public class AcknowledgeExtensionTest extends AbstractBayeuxClientServerTest {
 
         ServerSessionImpl session = (ServerSessionImpl)bayeux.getSession(clientId);
 
-        // Publish the message; it will get lost but the
-        // ack extension will track it and resend it later.
+        // Publish the message; the ack extension will track it and resend it later.
         String data = "data";
         bayeux.getChannel(channel).publish(null, data, Promise.noop());
         // Wait for the message to be lost.
         Thread.sleep(1000);
-        Assertions.assertEquals(0, session.getQueue().size());
+
+        Assertions.assertEquals(1, session.getQueue().size());
 
         connector.setPort(port);
         connector.start();
@@ -112,12 +123,15 @@ public class AcknowledgeExtensionTest extends AbstractBayeuxClientServerTest {
         Assertions.assertEquals(1, ackQueue.size());
 
         // Send the same /meta/connect *without* advice: { timeout: 0 }.
-        connect = newBayeuxRequest("[{" +
-                                   "\"channel\": \"/meta/connect\"," +
-                                   "\"clientId\": \"" + clientId + "\"," +
-                                   "\"connectionType\": \"long-polling\"," +
-                                   "\"ext\": { \"ack\": 0 }" +
-                                   "}]");
+        connect = newBayeuxRequest("""
+                [{
+                "id": "4",
+                "channel": "/meta/connect",
+                "clientId": "%s",
+                "connectionType": "long-polling",
+                "ext": { "ack": 0 }
+                }]
+                """.formatted(clientId));
         CompletableFuture<ContentResponse> listener = new CompletableResponseListener(connect).send();
 
         // It must return immediately because there is a message in the unacknowledged queue.
@@ -138,10 +152,13 @@ public class AcknowledgeExtensionTest extends AbstractBayeuxClientServerTest {
             Assertions.assertEquals(data, m2.getData());
         }
 
-        Request disconnect = newBayeuxRequest("[{" +
-                                              "\"channel\": \"/meta/disconnect\"," +
-                                              "\"clientId\": \"" + clientId + "\"" +
-                                              "}]");
+        Request disconnect = newBayeuxRequest("""
+                [{
+                "id": "5",
+                "channel": "/meta/disconnect",
+                "clientId": "%s"
+                }]
+                """.formatted(clientId));
         response = disconnect.send();
         Assertions.assertEquals(200, response.getStatus());
     }
@@ -153,42 +170,54 @@ public class AcknowledgeExtensionTest extends AbstractBayeuxClientServerTest {
         startServer(transport, null);
         bayeux.addExtension(new AcknowledgedMessagesExtension());
 
-        Request handshake = newBayeuxRequest("[{" +
-                                             "\"channel\": \"/meta/handshake\"," +
-                                             "\"version\": \"1.0\"," +
-                                             "\"minimumVersion\": \"1.0\"," +
-                                             "\"supportedConnectionTypes\": [\"long-polling\"]," +
-                                             "\"ext\": { \"ack\": true }" +
-                                             "}]");
+        Request handshake = newBayeuxRequest("""
+                [{
+                "id": "0",
+                "channel": "/meta/handshake",
+                "version": "1.0",
+                "minimumVersion": "1.0",
+                "supportedConnectionTypes": ["long-polling"],
+                "ext": { "ack": true }
+                }]
+                """);
         ContentResponse response = handshake.send();
         Assertions.assertEquals(200, response.getStatus());
 
         String clientId = extractClientId(response);
 
-        Request connect = newBayeuxRequest("[{" +
-                                           "\"channel\": \"/meta/connect\"," +
-                                           "\"clientId\": \"" + clientId + "\"," +
-                                           "\"connectionType\": \"long-polling\"," +
-                                           "\"ext\": { \"ack\": -1 }" +
-                                           "}]");
+        Request connect = newBayeuxRequest("""
+                [{
+                "id": "1",
+                "channel": "/meta/connect",
+                "clientId": "%s",
+                "connectionType": "long-polling",
+                "ext": { "ack": -1 }
+                }]
+                """.formatted(clientId));
         response = connect.send();
         Assertions.assertEquals(200, response.getStatus());
 
         String channel = "/foo";
-        Request subscribe = newBayeuxRequest("[{" +
-                                             "\"channel\": \"/meta/subscribe\"," +
-                                             "\"clientId\": \"" + clientId + "\"," +
-                                             "\"subscription\": \"" + channel + "\"" +
-                                             "}]");
+        Request subscribe = newBayeuxRequest("""
+                [{
+                "id": "2",
+                "channel": "/meta/subscribe",
+                "clientId": "%s",
+                "subscription": "%s"
+                }]
+                """.formatted(clientId, channel));
         response = subscribe.send();
         Assertions.assertEquals(200, response.getStatus());
 
-        connect = newBayeuxRequest("[{" +
-                                   "\"channel\": \"/meta/connect\"," +
-                                   "\"clientId\": \"" + clientId + "\"," +
-                                   "\"connectionType\": \"long-polling\"," +
-                                   "\"ext\": { \"ack\": 0 }" +
-                                   "}]");
+        connect = newBayeuxRequest("""
+                [{
+                "id": "3",
+                "channel": "/meta/connect",
+                "clientId": "%s",
+                "connectionType": "long-polling",
+                "ext": { "ack": 0 }
+                }]
+                """.formatted(clientId));
         connect.send(null);
         // Wait for the long poll.
         Thread.sleep(1000);
@@ -218,18 +247,21 @@ public class AcknowledgeExtensionTest extends AbstractBayeuxClientServerTest {
         Assertions.assertEquals(1, ackQueue.size());
 
         // Send the same /meta/connect *without* advice: { timeout: 0 }.
-        connect = newBayeuxRequest("[{" +
-                                   "\"channel\": \"/meta/connect\"," +
-                                   "\"clientId\": \"" + clientId + "\"," +
-                                   "\"connectionType\": \"long-polling\"," +
-                                   "\"ext\": { \"ack\": 0 }" +
-                                   "}]");
+        connect = newBayeuxRequest("""
+                [{
+                "id": "4",
+                "channel": "/meta/connect",
+                "clientId": "%s",
+                "connectionType": "long-polling",
+                "ext": { "ack": 0 }
+                }]
+                """.formatted(clientId));
         CompletableFuture<ContentResponse> listener = new CompletableResponseListener(connect).send();
 
         // It must be held because there are only lazy messages.
         try {
-            listener.get(1, TimeUnit.SECONDS);
-            Assertions.fail();
+            response = listener.get(1, TimeUnit.SECONDS);
+            Assertions.fail(response.toString());
         } catch (TimeoutException x) {
             // Expected.
         }
@@ -251,10 +283,13 @@ public class AcknowledgeExtensionTest extends AbstractBayeuxClientServerTest {
             Assertions.assertEquals(data, m2.getData());
         }
 
-        Request disconnect = newBayeuxRequest("[{" +
-                                              "\"channel\": \"/meta/disconnect\"," +
-                                              "\"clientId\": \"" + clientId + "\"" +
-                                              "}]");
+        Request disconnect = newBayeuxRequest("""
+                [{
+                "id": "5",
+                "channel": "/meta/disconnect",
+                "clientId": "%s"
+                }]
+                """.formatted(clientId));
         response = disconnect.send();
         Assertions.assertEquals(200, response.getStatus());
     }
