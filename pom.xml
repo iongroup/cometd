@@ -91,7 +91,7 @@
   <properties>
     <dojo-version>1.17.3</dojo-version>
     <graalvm-version>22.3.5</graalvm-version>
-    <jackson-version>2.17.0</jackson-version>
+    <jackson-version>2.17.1</jackson-version>
     <!-- tag::jetty-version[] -->
     <jetty-version>11.0.20</jetty-version>
     <!-- end::jetty-version[] -->
@@ -239,7 +239,7 @@
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <version>4.3</version>
+          <version>4.5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
