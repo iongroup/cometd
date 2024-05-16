@@ -72,7 +72,6 @@ git commit -m "Release ${VERSION}."
 git tag -am "Release ${VERSION}." ${VERSION}
 git push --follow-tags
 
-# TODO: remove beta when 8.0.0 is final (and update 7.0.x to keep 8.0.x as latest).
 if yes_no "Publish to NPM ? (Y/n)" y; then
-  npm publish --tag beta
+  npm publish
 fi
