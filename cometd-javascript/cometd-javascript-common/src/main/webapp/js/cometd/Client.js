@@ -866,7 +866,7 @@ export class CometD {
             if (!this.#transport) {
                 const failure = "Could not find initial transport among: " + this.getTransportTypes();
                 this._warn(failure);
-                throw failure;
+                throw new Error(failure);
             }
         }
 
