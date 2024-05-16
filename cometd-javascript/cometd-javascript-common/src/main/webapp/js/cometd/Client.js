@@ -1085,9 +1085,12 @@ export class CometD {
                     transport: null
                 });
                 return;
-            } else if (this.#transport !== newTransport) {
-                this._debug("Transport", this.#transport && this.#transport.type, "->", newTransport.type);
-                this.#transport = newTransport;
+            } else {
+                const oldTransport = this.#transport;
+                if (oldTransport !== newTransport) {
+                    this._debug("Transport", oldTransport && oldTransport.type, "->", newTransport.type);
+                    this.#transport = newTransport;
+                }
             }
 
             this.#clientId = message.clientId;
