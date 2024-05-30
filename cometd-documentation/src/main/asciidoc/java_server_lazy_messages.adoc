@@ -20,7 +20,7 @@ An application can mark a message as lazy by calling `ServerMessage.Mutable.setL
 include::{doc_code}/server/ServerLazyMessagesDocs.java[tags=lazyMessage]
 ----
 
-In this example, an external system invokes method `LazyMessageService.receiveNewsFromExternalSystem(...)` every time there is news, and the service broadcasts the news to all interested clients.
+In this example, an external system invokes method `LazyMessageService.receiveNewsFromExternalSystem()` every time there is news, and the service broadcasts the news to all interested clients.
 However, since the news need not be delivered immediately, the message is marked as lazy.
 
 Each remote client possibly receives the message at a different time: some receive it immediately (because, for example, they have other non-lazy messages to be delivered), some receive it after few milliseconds (because, for example, their `/meta/connect` timeout expires in a few milliseconds), while others receive it only upon the whole `maxLazyInterval` timeout.

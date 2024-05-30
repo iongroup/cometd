@@ -5,7 +5,7 @@
 Often an application needs to send several messages to different channels.
 A naive way of doing it follows:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 // Warning: non-optimal code
 cometd.publish("/channel1", { product: "foo" });
@@ -32,7 +32,7 @@ The result is that if you have a long poll timeout of five minutes, the second p
 
 You can optimize the three publishes using batching, which is a way to group messages together so that a single Bayeux message actually carries the three publish messages.
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.batch(() => {
     cometd.publish("/channel1", { product: "foo" });
@@ -70,7 +70,7 @@ Message batching allows efficient use of the network: instead of making three re
 
 Batches can consist of different API calls:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 let _subscription;
 cometd.batch(() => {

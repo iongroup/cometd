@@ -27,5 +27,5 @@ For these transports, the `BayeuxContext` is created anew for every HTTP request
 
 ===== WebSocket Contextual Information
 
-For the WebSocket transport, the `BayeuxContext` instance is created only once per connection, during the upgrade from HTTP to WebSocket.
+For the WebSocket transport, the `BayeuxContext` instance is created only once, during the upgrade from HTTP to WebSocket.
 The information contained in the HTTP upgrade request is copied into the `BayeuxContext` instance and never updated again, since after the upgrade the protocol is WebSocket, and the HTTP contextual information is not available anymore.

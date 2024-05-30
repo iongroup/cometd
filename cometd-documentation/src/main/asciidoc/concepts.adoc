@@ -282,7 +282,7 @@ Now that you know that applications interact with CometD through listeners, and 
 [[_concepts_application_authentication]]
 ===== Server-side Authentication
 
-For an application to interact with authentication, it must register a custom instance of a `SecurityPolicy` and override method `SecurityPolicy.canHandshake(...)`.
+For an application to interact with authentication, it must register a custom instance of a `SecurityPolicy` and override method `SecurityPolicy.canHandshake()`.
 The `SecurityPolicy` can customize the handshake reply (for example, to give details about an authentication failure) by retrieving the handshake reply from the handshake request:
 
 [source,java,indent=0]
@@ -292,7 +292,7 @@ include::{doc_code}/ConceptsDocs.java[tags=policy]
 
 If the authentication process takes a long time, it can be moved to a different
 thread to avoid blocking the CometD thread, here using
-`CompletableFuture.supplyAsync(...)`:
+`CompletableFuture.supplyAsync()`:
 
 [source,java,indent=0]
 ----
@@ -317,7 +317,7 @@ You can add server channel listeners in the following ways:
 
 * Directly via the API at initialization time (see xref:_java_server_services_integration[the services integration section]).
 * Indirectly by using inherited services (see xref:_java_server_services_inherited[the inherited services section]). +
-  You accomplish this by calling `AbstractService.addService(...)` or via annotated services (see xref:_java_server_services_annotated[the annotated services section]) using `@Listener` annotations.
+  You accomplish this by calling `AbstractService.addService()` or via annotated services (see xref:_java_server_services_annotated[the annotated services section]) using `@Listener` annotations.
 
 [IMPORTANT]
 ====
@@ -339,7 +339,7 @@ Applications that need to perform time consuming tasks in server-side listeners 
 [[_concepts_application_peer_communication]]
 ===== Communicating with a Specific Remote Client
 
-Applications that want to deliver messages to a specific client can do so by looking up its correspondent server session and delivering the message using `ServerSession.deliver(...)`.
+Applications that want to deliver messages to a specific client can do so by looking up its correspondent server session and delivering the message using `ServerSession.deliver()`.
 
 For example, remote client `client1` wants to send a message to another remote client `client2`.
 Both clients are already connected and therefore have already performed the handshake with the server.

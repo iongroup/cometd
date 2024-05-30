@@ -32,7 +32,7 @@ The default implementation `org.cometd.server.DefaultSecurityPolicy`:
 * Allows subscriptions from clients that performed a handshake, but not if the channel is a meta channel.
 * Allows publishes from clients that performed a handshake to any channel that is not a meta channel.
 
-A typical custom `SecurityPolicy` may override the `canHandshake(...)` method to control authentication:
+A typical custom `SecurityPolicy` may override the `canHandshake()` method to control authentication:
 
 [source,java,indent=0]
 ----

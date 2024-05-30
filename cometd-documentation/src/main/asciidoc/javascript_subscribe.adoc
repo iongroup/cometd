@@ -61,7 +61,7 @@ Calling `subscribe()` _does not_ mean that you have completed the subscription w
 
 If you want to be certain that the server received your subscription request (or not), you can either register a `/meta/subscribe` listener, or pass a callback function to `subscribe()`:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.subscribe("/foo", (message) => { ... }, (subscribeReply) => {
     if (subscribeReply.successful) {
@@ -75,9 +75,9 @@ In both cases `/meta/subscribe` listener, or the callback function, will be invo
 
 You can pass additional information to the subscribe message by passing an additional object to the `subscribe()` function:
 
-[source,ecmascript6]
+[source,javascript]
 ----
-var additional = {
+const additional = {
     "com.acme.priority": 10
 };
 cometd.subscribe("/foo", (message) => { ... }, additional, (subscribeReply) => {
@@ -93,11 +93,11 @@ Both `addListener()` and `subscribe()` return a subscription object that is opaq
 
 The returned subscription object should be passed to, respectively, `removeListener()` and `unsubscribe()`:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 // Some initialization code.
-var subscription1 = cometd.addListener("/meta/connect", (m) => { ... });
-var subscription2 = cometd.subscribe("/foo/bar/", (m) => { ... });
+const subscription1 = cometd.addListener("/meta/connect", (m) => { ... });
+const subscription2 = cometd.subscribe("/foo/bar/", (m) => { ... });
 
 // Some de-initialization code.
 cometd.unsubscribe(subscription2);
@@ -106,13 +106,13 @@ cometd.removeListener(subscription1);
 
 Function `unsubscribe()` can too take an additional object and a callback function as parameters:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 // Some initialization code.
-var subscription1 = cometd.subscribe("/foo/bar/", () => { ... });
+const subscription1 = cometd.subscribe("/foo/bar/", () => { ... });
 
 // Some de-initialization code.
-var additional = {
+const additional = {
     "com.acme.discard": true
 }
 cometd.unsubscribe(subscription1, additional, (unsubscribeReply) => {
@@ -137,7 +137,7 @@ Applications do not need to unsubscribe in case of re-handshake; the CometD libr
 
 For the same reason, you should never add listeners inside a `/meta/handshake` function, because this will add another listener without removing the previous one, resulting in multiple notifications of the same messages.
 
-[source,ecmascript6]
+[source,javascript]
 ----
 let _reportListener;
 cometd.addListener("/meta/handshake", (message) => {
@@ -177,7 +177,7 @@ In cases where the Bayeux server is not reachable (due to network failures or be
 Often times, applications need to perform dynamic subscriptions and unsubscriptions, for example when a user clicks on a user interface element, you want to subscribe to a certain channel.
 In this case the subscription object returned upon subscription is stored to be able to dynamically unsubscribe from the channel upon user demand:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 class Controller {
     #subscription = null;
@@ -201,13 +201,13 @@ class Controller {
 
 In case of a re-handshake, dynamic subscriptions are cleared (like any other subscription) and the application needs to figure out which dynamic subscription must be performed again.
 
-This information is already known to CometD at the moment `cometd.subscribe(...)` was called (above in method `dynamicSubscribe()`), so applications can just call `resubscribe()` using the subscription object obtained from `subscribe()`:
+This information is already known to CometD at the moment `cometd.subscribe()` was called (above in method `dynamicSubscribe()`), so applications can just call `resubscribe()` using the subscription object obtained from `subscribe()`:
 
-[source,ecmascript6]
+[source,javascript]
 ----
-cometd.addListener("/meta/handshake", function(message) {
+cometd.addListener("/meta/handshake", (message) => {
     if (message.successful) {
-        cometd.batch(function() {
+        cometd.batch(() => {
             // Static subscription, no need to remember the subscription handle
             cometd.subscribe("/static", staticFunction);
 
@@ -226,7 +226,7 @@ cometd.addListener("/meta/handshake", function(message) {
 If a listener or subscriber function throws an exception (for example, calls a function on an undefined object), the error message is logged at level "debug".
 However, there is a way to intercept these errors by defining the global listener exception handler that is invoked every time a listener or subscriber throws an exception:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.onListenerException = (exception, subscriptionHandle, isListener, message) => {
     // Uh-oh, something went wrong, disable this listener/subscriber.
@@ -247,7 +247,7 @@ Notice that a similar mechanism exists for extensions, see also xref:_extensions
 
 It is possible to subscribe to several channels simultaneously using wildcards:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.subscribe("/chatrooms/*", (message) => { ... });
 ----
@@ -255,7 +255,7 @@ cometd.subscribe("/chatrooms/*", (message) => { ... });
 A single asterisk has the meaning of matching a single channel segment; in the example above it matches channels `/chatrooms/12` and `/chatrooms/15`, but not `/chatrooms/12/upload`.
 To match multiple channel segments, use the double asterisk:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.subscribe("/events/**", (message) => { ... });
 ----
@@ -264,7 +264,7 @@ With the double asterisk, the channels `/events/stock/FOO` and `/events/forex/EU
 
 The wildcard mechanism works also for listeners, so it is possible to listen to all meta channels as follows:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.addListener("/meta/*", (message) => { ... });
 ----
@@ -290,7 +290,7 @@ In combination with `/meta/disconnect`, you can use it, for example, to display 
 
 Here is a common pattern using the `/meta/connect` and `/meta/disconnect` channels:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 let _connected = false;
 

@@ -18,12 +18,14 @@ The CometD libraries provide these latter characteristics.
 [cols="1a,1a,1a,1a,1a", options="header"]
 |===
 | CometD Version | Required Java Version | Jetty Version | Servlet Edition | Status
+| CometD 8.0.x | Java 17 | Jetty 12.0.x | JakartaEE 10 | Stable
+
 | CometD 7.0.x | Java 11 | Jetty 11.0.x | JakartaEE 9 +
-`jakarta.servlet.*` | Stable
+`jakarta.servlet.*` | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1179[#1179])
 
 | CometD 6.0.x | Java 11 | Jetty 10.0.x | JakartaEE 8 +
 JavaEE 8 +
-`javax.servlet.*` | Stable
+`javax.servlet.*` | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1179[#1179])
 
 | CometD 5.0.x | Java 8 | Jetty 9.4.x | JavaEE 7 | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1179[#1179])
 
@@ -41,7 +43,7 @@ JavaEE 5 | End-Of-Life
 Jetty 7.6.x | | End-Of-Life
 |===
 
-If you are new to CometD, you can follow this learning path: 
+If you are new to CometD, you can follow this learning path:
 
 . Read xref:_installation[the installation section] to download, install CometD and to try out its demos.
 . Read xref:_primer[the primer section] to get your hands dirty with CometD with a step-by-step tutorial.

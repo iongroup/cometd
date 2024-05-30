@@ -37,6 +37,8 @@ $ mvn archetype:generate -Dfilter=org.cometd.archetypes:jetty12
 Choose archetype:
 1: remote -> org.cometd.archetypes:cometd-archetype-es6-jetty12 (-)
 2: remote -> org.cometd.archetypes:cometd-archetype-jquery-jetty12 (-)
+3: remote -> org.cometd.archetypes:cometd-archetype-spring-es6-jetty12 (-)
+4: remote -> org.cometd.archetypes:cometd-archetype-spring-jquery-jetty12 (-)
 Choose a number:
 ----
 
@@ -48,7 +50,7 @@ Next, you have to choose the version of the archetype you want to use, typically
 ----
 Choose org.cometd.archetypes:cometd-archetype-es6-jetty12 version:
 ...
-81: 8.0.0
+3: 8.0.0
 ...
 ----
 
@@ -78,7 +80,7 @@ Y: :
 [NOTE]
 ====
 Do not worry for now about the Jetty version that is being used to generate
-the application skeleton, since it can be easily changed afterwards.
+the application skeleton, since it can be easily changed afterward.
 ====
 
 Then:
@@ -153,6 +155,7 @@ Then you just need to re-build and re-run the project as explained above.
 ==== The Non-Maven Way
 
 The client-side files necessary to set up a CometD project can be obtained in two ways:
+
 * From the https://github.com/cometd/cometd-javascript[CometD JavaScript] mirror repository.
   This is a repository that only hosts the JavaScript files of the main CometD project.
 * From the Maven Central Repository by downloading artifact `cometd-javascript-common-<version>.war`.
@@ -221,7 +224,7 @@ This is totally optional.
 The JavaScript application, contained in the `application.js` file, configures the `cometd` object and starts the application.
 The archetypes provide the following implementation, that you can use as inspiration to write your own:
 
-[source,ecmascript6,indent=0]
+[source,javascript,indent=0]
 ----
 include::../../../../cometd-archetypes/cometd-archetype-es6-jetty12/src/main/resources/archetype-resources/src/main/webapp/application.js[]
 ----

@@ -15,14 +15,14 @@ The typical workflow of an `OortService` is the following:
 
 . The `OortService` receives a message from a remote client.
   The message contains enough information for the `OortService` to determine which node owns the data onto which the action must be applied, in the form of the owner node's Oort URL.
-. Once the owner node Oort URL is known, the `OortService` can forward the action by calling method `forward(...)`, passing in action information and an opaque context.
+. Once the owner node Oort URL is known, the `OortService` can forward the action by calling method `forward()`, passing in action information and an opaque context.
   The owner node may be the node that received the message from the remote client itself, and applications do not need to do anything different from the case where the owner node is a different one.
-. The action arrives to the owner node and CometD invokes method `onForward(...)` on the `OortService` that resides on the owner node, passing in the action information sent from the second step.
-  Method `onForward(...)` is implemented by application to perform the custom logic and may return a successful result or a failure.
-. The successful action result returned by `onForward(...)` is sent back by CometD to the requesting node, and when it arrives there, CometD invokes method `onForwardSucceeded(...)`, passing in the result of the action returned by `onForward(...)` and the opaque context passed to the `forward(...)` method in the second step.
-  Method `onForwardSucceeded(...)` is implemented by the application.
-. The action failure returned by `onForward(...)` is sent back by CometD to the requesting node, and when it arrives there, CometD invokes method `onForwardFailed(...)`, passing in the failure returned by `onForward(...)` and the opaque context passed to the `forward(...)` method in the second step.
-  Method `onForwardFailed(...)` is implemented by the application.
+. The action arrives to the owner node and CometD invokes method `onForward()` on the `OortService` that resides on the owner node, passing in the action information sent from the second step.
+  Method `onForward()` is implemented by application to perform the custom logic and may return a successful result or a failure.
+. The successful action result returned by `onForward()` is sent back by CometD to the requesting node, and when it arrives there, CometD invokes method `onForwardSucceeded()`, passing in the result of the action returned by `onForward()` and the opaque context passed to the `forward()` method in the second step.
+  Method `onForwardSucceeded()` is implemented by the application.
+. The action failure returned by `onForward()` is sent back by CometD to the requesting node, and when it arrives there, CometD invokes method `onForwardFailed()`, passing in the failure returned by `onForward()` and the opaque context passed to the `forward()` method in the second step.
+  Method `onForwardFailed()` is implemented by the application.
 
 [[_java_oort_objects_oort_service_creation]]
 ===== OortService Creation
@@ -56,7 +56,7 @@ There is one instance of `OortPrimaryService` with the same name in each node (l
 
 CometD provides an out-of-the-box implementation of `OortPrimaryService`, `org.cometd.oort.OortPrimaryLong`, that can be used as a unique-across-the-cluster number generator.
 
-The implementation of an `OortPrimaryService` subclass is similar to that of `OortService` (see also xref:_java_oort_objects_oort_service_creation[this section]), but this time the `forward(...)` is always called with the same Oort URL (that of the _primary_ node) that can be obtained by calling method `OortPrimaryService.getPrimaryOortURL()`.
+The implementation of an `OortPrimaryService` subclass is similar to that of `OortService` (see also xref:_java_oort_objects_oort_service_creation[this section]), but this time the `forward()` is always called with the same Oort URL (that of the _primary_ node) that can be obtained by calling method `OortPrimaryService.getPrimaryOortURL()`.
 
 Decide whether or not a node is a primary node can be done by reading system properties passed to the command line, or via configuration files, or other similar means.
 

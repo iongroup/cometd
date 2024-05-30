@@ -7,8 +7,8 @@ CometD allows you to send messages in two ways:
 . by xref:_java_client_publish[publishing] a message onto a channel
 . by performing a xref:_java_client_rpc[remote procedure call]
 
-The first case is covered by the `ClientSessionChannel.publish(...)` API.
-The second case is covered by the `ClientSession.remoteCall(...)` API.
+The first case is covered by the `ClientSessionChannel.publish()` API.
+The second case is covered by the `ClientSession.remoteCall()` API.
 
 [[_java_client_publish]]
 ===== Publishing

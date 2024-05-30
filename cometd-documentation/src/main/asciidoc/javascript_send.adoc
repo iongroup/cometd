@@ -19,7 +19,7 @@ This case is supported by using the `publishBinary()` and `remoteCallBinary()` v
 
 The `publish()` function allows you to publish data onto a certain channel:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.publish("/mychannel", { mydata: { foo: "bar" } });
 ----
@@ -37,7 +37,7 @@ For historical reasons, publish acknowledgments and failures are notified on the
 
 In order to be notified of publish acknowledgments or failures, is it recommended that you use this variant of the `publish()` function, passing a callback function:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.publish("/mychannel", { mydata: { foo: "bar" } }, (publishReply) => {
     if (publishReply.successful) {
@@ -70,7 +70,7 @@ Remember that you must have the binary extension enabled as specified in xref:_e
 
 To publish binary data, you must first create or obtain a JavaScript typed array, a `DataView` or an `ArrayBuffer`, and then use the `publishBinary()` API:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 // Create an ArrayBuffer.
 const buffer = new ArrayBuffer(4);
@@ -97,7 +97,7 @@ Like normal `publish()` calls, you can pass as last parameter to `publishBinary(
 
 When you need to just call the server to perform some action, such as retrieving data from a database, or updating some server state, you want to use a remote call:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.remoteCall("target", { foo: "bar" }, 5000, (response) => {
     if (response.successful) {
@@ -163,7 +163,7 @@ Remember that you must have the binary extension enabled in the client as specif
 
 Here is an example that sends an `ArrayBuffer`:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 // Obtain an ArrayBuffer.
 const buffer = ...;

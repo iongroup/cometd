@@ -2,7 +2,7 @@
 [[_java_server_configuration]]
 ==== Configuring the Java Server
 
-You can specify `BayeuxServer` parameters and server transport parameters in `web.xml` as init parameters of the `org.cometd.server.CometDServlet`.
+You can specify `BayeuxServer` parameters and server transport parameters in `web.xml` as init parameters of the `org.cometd.server.http.jakarta.CometDServlet`.
 If the CometD servlet creates the `BayeuxServer` instance, the servlet init parameters are passed to the `BayeuxServer` instance, which in turn configures the server transports.
 
 If you followed xref:_primer[the primer], Maven has configured the `web.xml` file for you; here are details its configuration, a sample `web.xml`:
@@ -33,7 +33,7 @@ If you followed xref:_primer[the primer], Maven has configured the `web.xml` fil
 </web-app>
 ----
 
-You must define and map the `org.cometd.server.CometDServlet` in `web.xml` to enable the server to interpret the Bayeux protocol.
+You must define and map the `org.cometd.server.http.jakarta.CometDServlet` in `web.xml` to enable the server to interpret the Bayeux protocol.
 It is normally mapped to `+/cometd/*+`, but you can change the `url-pattern` mapping if you prefer, or even have multiple mappings.
 
 [[_java_server_configuration_bayeux]]
@@ -303,7 +303,7 @@ Here is an example of `web.xml` configuration for the `CrossOriginFilter`:
 </web-app>
 ----
 
-Refer to the https://www.eclipse.org/jetty/documentation/current/cross-origin-filter.html[Jetty Cross Origin Filter documentation] for the filter configuration.
+For more information about the `CrossOriginFilter`, refer to the https://jetty.org/docs/[Jetty documentation].
 
 [[_java_server_configuration_advanced_cookies]]
 ====== Configuring Cookies
@@ -319,14 +319,14 @@ https://developer.mozilla.org/en-US/docs/Web/Privacy/Partitioned_cookies[This ar
 
 Refer to the CometD xref:_java_server_configuration_transports[server configuration section] for the cookie configuration in the CometD server.
 
-[[_java_server_configuration_servlet_30]]
-===== Configuring Servlet 3.0 or later Asynchronous Features
+[[_java_server_configuration_servlet]]
+===== Configuring Servlet 6.0 or later Asynchronous Features
 
-The CometD libraries are portable across Servlet Containers because they use the standard Servlet 3 APIs.
+The CometD libraries are portable across Servlet Containers because they use the standard Servlet 6 APIs.
 
-To enable the Servlet 3 asynchronous features, you need to:
+To enable the Servlet 6 asynchronous features, you need to:
 
-* Make sure that in `web.xml` the `version` attribute of the `web-app` element is 3.0 or greater <1>.
+* Make sure that in `web.xml` the `version` attribute of the `web-app` element is 6.0 or greater <1>.
 * Add the `async-supported` element to filters that might execute before the `CometDServlet` _and_ to the `CometDServlet` itself <2>.
 
 [NOTE]
@@ -368,7 +368,7 @@ For example:
 </web-app>
 ----
 
-The typical error that you get if you do not enable the Servlet 3 asynchronous features is the following:
+The typical error that you get if you do not enable the Servlet 6 asynchronous features is the following:
 
 ----
 IllegalStateException: the servlet does not support async operations for this request

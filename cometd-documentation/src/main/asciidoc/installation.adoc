@@ -4,10 +4,10 @@
 
 === Requirements and Dependencies
 
-In order to run CometD applications, you need the Java Development Kit (JDK) -- version 8 or greater, and a compliant Servlet 3.0 or greater Servlet Container such as https://eclipse.org/jetty[Jetty].
+In order to run CometD applications, you need the Java Development Kit (JDK) -- version 17 or greater, and a compliant Jakarta EE 10 / Servlet 6.0 or greater Servlet Container such as https://eclipse.org/jetty[Jetty 12].
 
 The CometD implementation depends on few Jetty libraries, such as `jetty-util-ajax-<version>.jar` and others.
-These Jetty dependencies are typically packaged in the `WEB-INF/lib` directory of your application `.war` file, and do not require you to deploy your application `.war` file in Jetty: your CometD-based application will work exactly in the same way in any other compliant Servlet 3.0 or greater Servlet Container.
+These Jetty dependencies are typically packaged in the `WEB-INF/lib` directory of your application `.war` file, and do not require you to deploy your application `.war` file in Jetty: your CometD-based application will work exactly in the same way in any other compliant Jakarta EE 10 / Servlet 6.0 or greater Servlet Container.
 
 The current Jetty version CometD depends on by default is:
 
@@ -30,7 +30,7 @@ $ cd cometd-<version>/
 [[_installation_demos]]
 === Running the Demos
 
-The CometD Demos contain:
+The CometD demos contain:
 
 * Two full chat applications (one developed with ES6 Javascript and one with jQuery).
 * Examples of extensions such as message acknowledgement, reload, timesync and timestamp.
@@ -39,7 +39,7 @@ The CometD Demos contain:
 
 ==== Running the Demos with Maven
 
-This mode of running the CometD Demos is suggested if you want to take a quick look at the CometD Demos and if you are prototyping/experimenting with your application, but it's not the recommended way to deploy a CometD application in production.
+This mode of running the CometD demos is suggested if you want to take a quick look at the CometD demos and if you are prototyping/experimenting with your application, but it's not the recommended way to deploy a CometD application in production.
 See the xref:_installation_jetty[next section] for the suggested way to deploy your CometD application in production.
 
 Maven requires you to set up the `JAVA_HOME` environment variable to point to your JDK installation.
@@ -54,20 +54,20 @@ $ mvn jetty:run
 ----
 
 The last command starts an embedded Jetty server that listens on port 8080 for clear-text HTTP/1.1 (`http`) and on port 8443 for both encrypted HTTP/1.1 and HTTP/2 (`https`).
-Now point your browser to `+http://localhost:8080+` or to `+https://localhost:8443+` to see the CometD Demos main page.
+Now point your browser to `+http://localhost:8080+` or to `+https://localhost:8443+` to see the CometD demos main page.
 
 When connecting using `https`, the browser may display a page that says something like "Your connection is not secure" or "This site is not secure".
-Don't worry, this message is due to the fact that the CometD Demos use a self-signed certificate to encrypt the traffic between the browser and the embedded Jetty server.
-The browser will display a button or a link to consider the site safe and you will be able to continue to the CometD Demos main page.
+Don't worry, this message is due to the fact that the CometD demos use a self-signed certificate to encrypt the traffic between the browser and the embedded Jetty server.
+The browser will display a button or a link to consider the site safe and you will be able to continue to the CometD demos main page.
 
 === Deploying your CometD Application
 
 When you develop a CometD application, you develop a standard Java EE Web Application that is then packaged into a `.war` file.
 You can follow xref:_primer[the Primer section] for examples of how to build and package your CometD application.
 
-Once you have your CometD application packaged into a `.war` file, you can deploy it to any Servlet Container that supports Servlet 3.0 or greater.
+Once you have your CometD application packaged into a `.war` file, you can deploy it to any Servlet Container that supports Jakarta EE 10 / Servlet 6.0 or greater.
 
-Refer to xref:_java_server_configuration_servlet_30[this section] for further information and for specific instructions related to deployment on Servlet 3.0 (or greater) Containers.
+Refer to xref:_java_server_configuration_servlet[this section] for further information and for specific instructions related to deployment on Servlet Containers.
 
 [[_installation_jetty]]
 ==== Deploying your CometD Application in Standalone Jetty
@@ -100,20 +100,20 @@ This creates a directory called `~/jetty_cometd` that is referred to as the `JET
 
 Since Jetty is a highly modular Servlet Container, the `JETTY_BASE` is the directory where you configure Jetty with the Jetty modules that are needed to run your CometD application.
 
-In order to run CometD applications, Jetty needs to be configured with these modules:
+In order to run CometD applications, Jetty needs to be configured minimally with these modules:
 
-* the `http` module, that provides support for the HTTP protocol
-* the `websocket` module, that provides support for the WebSocket protocol
-* the `deploy` module, that provides support for the deployment of `.war` files
+* the `http` module, that provides support for the HTTP clear-text protocol
+* the `ee10-websocket-jakarta` module, that provides support for the WebSocket protocol with the Jakarta EE 10 WebSocket APIs
+* the `ee10-deploy` module, that provides support for the deployment of `.war` files
 
 Therefore:
 
 ----
 $ cd $JETTY_BASE
-$ java -jar $JETTY_HOME/start.jar --add-to-start=http,websocket,deploy
+$ java -jar $JETTY_HOME/start.jar --add-to-start=http,ee10-websocket-jakarta,ee10-deploy
 ----
 
-Now Jetty is configured to run CometD applications, and you just need to deploy your `.war` file to Jetty (you can use the CometD Demos `.war` file if you have not built your application yet):
+Now Jetty is configured to run CometD applications, and you just need to deploy your `.war` file to Jetty (you can use the CometD demos `.war` file if you have not built your application yet):
 
 ----
 $ cp /path/to/cometd_application.war $JETTY_BASE/webapps/
@@ -133,7 +133,7 @@ This last command starts Jetty, which deploys your `.war` file and makes your Co
 
 You can also deploy your CometD application programmatically, using the Jetty APIs to embed your web application as a normal Java application that you would start via command line.
 
-Below you can find an example that shows how to setup Jetty embedded and CometD with support for HTTP, HTTPS and WebSocket transports:
+Below you can find an example that shows how to set up Jetty embedded and CometD with support for HTTP, HTTPS and WebSocket transports:
 
 [source,java,indent=0]
 ----

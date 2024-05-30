@@ -18,17 +18,10 @@ Servlet Containers provide HTTP and WebSocket wire transports that the CometD se
 xref:_bayeux[The Bayeux protocol] defines two mandatory transports based on HTTP: `long-polling` and `callback-polling`.
 These two transports are automatically configured in the `BayeuxServer` instance, and there is no need to explicitly specify them in the configuration.
 
-For the `long-polling` transport there exist two implementations:
+For the `long-polling` transport the implementation is `org.cometd.server.http.JSONHttpTransport`, which uses the Servlet's non-blocking I/O APIs.
 
-* `org.cometd.server.servlet.transport.AsyncJSONTransport`, which uses Servlet 3.1 non-blocking I/O and it is only available when the CometD web application is deployed to Servlet Containers that support Servlet 3.1
-// TODO: fix this referring to Jetty Handlers.
-* `org.cometd.server.handler.transport.AsyncJSONTransport`, which depends on Servlet 3.0 and uses blocking I/O
-
-// TODO: fix this paragraph.
-The CometD server tries to lookup the presence of Servlet 3.1 via reflection on startup; if it is available, then `ServletJSONTransport` is preferred over `JSONTransport`, as it is more scalable in the case of a large number of clients because it uses non-blocking I/O.
-
-For the `callback-polling` transport the implementation class is `org.cometd.server.http.JSONPTransport`.
-This transport uses blocking I/O and it is the least efficient; the CometD server only uses it when all other transports cannot be used.
+For the `callback-polling` transport the implementation class is `org.cometd.server.http.JSONPHttpTransport`.
+This transport is the least efficient, and the CometD server only uses it when all other transports cannot be used.
 
 HTTP transports may require a more advanced configuration described in xref:_java_server_configuration_advanced[this section].
 
@@ -37,10 +30,10 @@ HTTP transports may require a more advanced configuration described in xref:_jav
 
 For the `websocket` transport there exist two implementations:
 
-* one based on the standard Jakarta APIs.
-  If these APIs are available, CometD will use a `websocket` transport based on the standard WebSocket APIs, whose implementation class is named `org.cometd.server.websocket.jakarta.WebSocketTransport`
+* one based on the standard Jakarta EE 10 APIs.
+  If these APIs are available, CometD will use a `websocket` transport based on the standard Jakarta EE 10 WebSocket APIs, whose implementation class is named `org.cometd.server.websocket.jakarta.WebSocketTransport`
 * one based on the Jetty WebSocket APIs, whose implementation class is named `org.cometd.server.websocket.jetty.JettyWebSocketTransport`.
-  CometD will _not_ attempt to use this transport automatically; applications that want to make use of the extra features provided by this transport must explicitly configure it (typically along with a HTTP transport such as `long-polling`) using the `transports` parameter as described in xref:_java_server_configuration[the server configuration section].
+  CometD will _not_ attempt to use this transport automatically; applications that want to make use of the extra features provided by this transport must explicitly configure it (typically along with an HTTP transport such as `long-polling`) using the `transports` parameter as described in xref:_java_server_configuration[the server configuration section].
 
 The order of preference for the server transport is: `[websocket, long-polling, callback-polling]`.
 
@@ -52,7 +45,7 @@ It is possible to use the `websocket` _client_ transport on the server (for exam
 For example, it is possible to have a client communicating via HTTP to a CometD web application running in Tomcat, which communicates via WebSocket to another CometD web application running in Jetty.
 ====
 
-The CometD server tries to lookup the Jakarta WebSocket APIs via reflection on startup; if they are available, then it creates the `websocket` transport based on the Jakarta WebSocket APIs.
+The CometD server tries to look up the Jakarta EE 10 WebSocket APIs via reflection on startup; if they are available, then it creates the `websocket` transport based on the Jakarta EE 10 WebSocket APIs.
 
 [IMPORTANT]
 ====

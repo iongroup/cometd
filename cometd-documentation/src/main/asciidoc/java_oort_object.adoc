@@ -118,30 +118,30 @@ In the example above, the data entity is a whole `List<String>`, so that's what 
 include::{doc_code}/oort/OortObjectDocs.java[tags=shareList]
 ----
 
-Method `setAndShare(...)` will replace the empty list (created internally when the `OortObject` was created) with the provided list, and broadcast this event to the cluster so that other nodes can replace the part they have associated with this node with the new one.
+Method `setAndShare()` will replace the empty list (created internally when the `OortObject` was created) with the provided list, and broadcast this event to the cluster so that other nodes can replace the part they have associated with this node with the new one.
 
-Similarly, `OortMap` has the `putAndShare(...)` and `removeAndShare(...)` methods to put/remove the map entries and share them:
+Similarly, `OortMap` has the `putAndShare()` and `removeAndShare()` methods to put/remove the map entries and share them:
 
 [source,java,indent=0]
 ----
 include::{doc_code}/oort/OortObjectDocs.java[tags=useMap]
 ----
 
-`OortList` has `addAndShare(...)` and `removeAndShare(...)`:
+`OortList` has `addAndShare()` and `removeAndShare()`:
 
 [source,java,indent=0]
 ----
 include::{doc_code}/oort/OortObjectDocs.java[tags=useList]
 ----
 
-Both `OortMap` and `OortList` inherit from `OortObject` method `setAndShare(...)` if you need to replace the whole map or list.
+Both `OortMap` and `OortList` inherit from `OortObject` method `setAndShare()` if you need to replace the whole map or list.
 
 The `OortObject` API will try to make it hard for you to interact directly with the data entity, and this is by design.
 If you can modify the data entity directly without using the above methods, then the local data entity will be out of sync with the correspondent data entities in the other nodes.
 Whenever you feel the need to access the data entity, and you cannot find an easy way to do it, consider that you are probably taking the wrong approach.
 
 For the same reasons mentioned above, it is highly recommended that the data that you store in an Oort object is immutable.
-In the `OortStringMap` example above, the `UserInfo` object should be immutable, and if you need to change it, it is better to create a new `UserInfo` instance with the new data and then call `putAndShare(...)` to replace the old one, which will ensure that all nodes will get the update.
+In the `OortStringMap` example above, the `UserInfo` object should be immutable, and if you need to change it, it is better to create a new `UserInfo` instance with the new data and then call `putAndShare()` to replace the old one, which will ensure that all nodes will get the update.
 
 [[_java_oort_objects_oort_object_serialization]]
 ===== OortObject Custom Data Entity Serialization
@@ -244,10 +244,10 @@ You must specify class `MyCustomJSONContextServer` as the `jsonContext` paramete
 </web-app>
 ----
 
-To summarize, the serialization of the `ConcurrentMap` data entity of a `OortStringMap` will happen in the following way: the `ConcurrentMap` is a `Map` and is natively represented as a JSON object; the `UserInfo` values will be converted to JSON as specified by the `UserInfoConvertor.toJSON(...)` method.
+To summarize, the serialization of the `ConcurrentMap` data entity of a `OortStringMap` will happen in the following way: the `ConcurrentMap` is a `Map` and is natively represented as a JSON object; the `UserInfo` values will be converted to JSON as specified by the `UserInfoConvertor.toJSON()` method.
 
 The JSON obtained after the serialization is transmitted to other nodes.
-The node that receive it will deserialize the received JSON into a plain `Map` containing `UserInfo` value objects converted as specified by the `UserInfoConvertor.fromJSON(...)` method.
+The node that receive it will deserialize the received JSON into a plain `Map` containing `UserInfo` value objects converted as specified by the `UserInfoConvertor.fromJSON()` method.
 Finally, the plain `Map` object will be passed to the Oort object factory (see also xref:_java_oort_objects_oort_object_creation[the `OortObjects` creation section]) to be converted into a `ConcurrentMap`.
 
 [[_java_oort_objects_oort_object_merging]]
@@ -301,14 +301,14 @@ Class `org.cometd.oort.OortObject.Info` represents a data entity part of an `Oor
 For this particular example, the `Info` objects are not important, since you are only interested in the total user count, that can be obtained with the `sum()` method (which internally performs merging -- see also xref:_java_oort_objects_oort_object_merging[the `OortObject` merging section]).
 They can be used, however, to compute the difference before and after the update if needed, since `Info.getObject()` returns a `Long` value that is the contribution to the total count of the correspondent data entity part.
 
-Similarly, `OortMap` supports registration of `OortMap.EntryListener` that are notified when `OortMap` entries change due to calls to `putAndShare(...)` or `removeAndShare(...)`.
+Similarly, `OortMap` supports registration of `OortMap.EntryListener` that are notified when `OortMap` entries change due to calls to `putAndShare()` or `removeAndShare()`.
 `OortMap.EntryListener` are notified only when map entries are updated.
-To be notified when the whole map changes due to calls to `setAndShare(...)`, you can use an `OortMap.Listener` (inherited from `OortObject`) as described above.
+To be notified when the whole map changes due to calls to `setAndShare()`, you can use an `OortMap.Listener` (inherited from `OortObject`) as described above.
 In some cases, the whole map is updated but you want to be notified as if single entries are changed; in this case you can use an `OortMap.DeltaListener`, that converts whole map updates into map entry updates.
 
-`OortList` supports registration of `OortList.ElementListener` that are notified when `OortList` elements change due to calls to `addAndShare(...)` or `removeAndShare(...)`.
+`OortList` supports registration of `OortList.ElementListener` that are notified when `OortList` elements change due to calls to `addAndShare()` or `removeAndShare()`.
 `OortList.ElementListener` are notified only when list elements are updated.
-To be notified when the whole list changes due to calls to `setAndShare(...)`, you can use an `OortList.Listener` (inherited from `OortObject`) as described above.
+To be notified when the whole list changes due to calls to `setAndShare()`, you can use an `OortList.Listener` (inherited from `OortObject`) as described above.
 In some cases, the whole list is updated but you want to be notified as if single elements are changed; in this case you can use an `OortList.DeltaListener`, that converts whole list updates into list element updates.
 
 ===== OortObjects Synchronization Limits

@@ -15,7 +15,7 @@ Notice the following:
 <1> The class is `public` and extends from `org.cometd.server.AbstractService`.
 <2> Defines a constructor that takes an `org.cometd.bayeux.server.BayeuxServer` object.
 <3> Calls the superclass constructor, passing the BayeuxServer object and an arbitrary name of the service, in this case "echo".
-<4> Subscribes to channel `/echo`, and specifies the name of a service method that must be called when a message arrives to that channel, via `addService(...)`.
+<4> Subscribes to channel `/echo`, and specifies the name of a service method that must be called when a message arrives to that channel, via `addService()`.
 <5> Defines a method with the same name specified in (4), and with an appropriate signature (see below).
 <6> Uses the `org.cometd.bayeux.server.ServerSession` API to echo the message back to that particular client.
 
@@ -28,16 +28,16 @@ public void processEcho(ServerSession remote, ServerMessage message)
 
 Service methods must be `public`; they must have two parameters; the first parameter must be of type `ServerSession`; the second parameter must be of type `ServerMessage` or derived (such as `ServerMessage.Mutable`).
 
-The channel name specified to the `addService(...)` method may be a wildcard, for example:
+The channel name specified to the `addService()` method may be a wildcard, for example:
 
 [source,java,indent=0]
 ----
 include::{doc_code}/server/ServerServiceDocs.java[tags=wildcard]
 ----
 
-Note also how the first example uses `ServerSession.deliver(...)` to send a message to a particular remote client, while the second uses `ServerChannel.publish(...)` to send a message to anyone who subscribes to channel `+/events/baseball/team/*+`.
+Note also how the first example uses `ServerSession.deliver()` to send a message to a particular remote client, while the second uses `ServerChannel.publish()` to send a message to anyone who subscribes to channel `+/events/baseball/team/*+`.
 
-Method `addService(...)` is used to map a server-side channel listener with a service method that is invoked every time a message arrives on the channel.
+Method `addService()` is used to map a server-side channel listener with a service method that is invoked every time a message arrives on the channel.
 
 It is not uncommon that a single service has multiple service methods, and service methods may be even added and removed dynamically:
 
@@ -46,7 +46,7 @@ It is not uncommon that a single service has multiple service methods, and servi
 include::{doc_code}/server/ServerServiceDocs.java[tags=dynamic]
 ----
 
-Note how service methods can be removed using `removeService(...)`.
+Note how service methods can be removed using `removeService()`.
 
 Each time a service instance is created, an associated `LocalSession` (see also xref:_concepts_sessions[this section]) is created within the service itself: the service is a local client.
 

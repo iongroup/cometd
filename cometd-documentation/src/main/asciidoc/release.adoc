@@ -47,7 +47,7 @@ This will make the staged project downloadable for testing, but not yet publishe
 Tick again the checkbox correspondent to the closed staged project, choose "Release" from the toolbar, then click on the "Release" button.
 This will publish the project to the Maven Central Repository.
 
-[[_release_issues]]
-=== Close the GitHub Issues Project
+[[_release_github]]
+=== Make a GitHub Release
 
-Close the https://github.com/cometd/cometd/projects[GitHub Issues Project].
+Make a https://github.com/cometd/cometd/releases[GitHub release].

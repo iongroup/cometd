@@ -19,7 +19,7 @@ include::{doc_code}/ExtensionsDocs.java[tags=binaryServer]
 
 `BinaryExtension.js` provides the client-side extension implementation, and it is sufficient to import and register an instance with the CometD object:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 import {BinaryExtension} from "cometd/BinaryExtension.js";
 

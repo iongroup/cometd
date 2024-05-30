@@ -38,7 +38,7 @@ and processed by the server, you can pass a callback `MessageListener` to the
 include::{doc_code}/client/ClientSubscribeDocs.java[tags=callbackSubscribe]
 ----
 
-As in xref:_javascript_subscribe[the JavaScript subscribe section], a good place to perform subscriptions is a `handshake(...)` callback or a `/meta/handshake` listener, because they are invoked transparently if the server requests a new handshake.
+As in xref:_javascript_subscribe[the JavaScript subscribe section], a good place to perform subscriptions is a `handshake()` callback or a `/meta/handshake` listener, because they are invoked transparently if the server requests a new handshake.
 
 Applications do not need to unsubscribe in case of re-handshake; the CometD library removes the subscriptions upon re-handshake, so that when the `/meta/handshake` listener executes again the subscriptions are correctly restored (and not duplicated).
 

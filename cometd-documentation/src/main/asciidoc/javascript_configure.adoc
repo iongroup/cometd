@@ -19,7 +19,7 @@ If you need to connect to multiple Bayeux servers, see xref:_javascript_configur
 
 There are two ways of passing the URL parameter:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 import {CometD} from "cometd/cometd.js";
 
@@ -135,7 +135,7 @@ Sometimes there is the need to connect to multiple Bayeux servers.
 
 However, it is easy to create other `cometd` objects by simply creating more instances of the `CometD` class:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 import {CometD} from "cometd/cometd.js";
 

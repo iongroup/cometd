@@ -46,7 +46,7 @@ A configuration example follows:
 
     <servlet>
         <servlet-name>seti</servlet-name>
-        <servlet-class>org.cometd.oort.jakarta.SetiServletorg.cometd.oort.jakarta.SetiServlet</servlet-class>
+        <servlet-class>org.cometd.oort.jakarta.SetiServlet</servlet-class>
         <load-on-startup>3</load-on-startup>
     </servlet>
 </web-app>

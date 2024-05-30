@@ -6,8 +6,8 @@
 
 Building the CometD project has 2 minimum requirements:
 
-* https://java.oracle.com[JDK 11] or greater, to compile the Java code
-* https://maven.apache.org[Maven 3] or greater, the build tool
+* https://java.oracle.com[JDK 17] or greater, to compile the Java code
+* https://maven.apache.org[Maven 3.9] or greater, the build tool
 
 Make sure that the `mvn` executable is in your path, and that your `JAVA_HOME` environment variable points to the directory where Java is installed.
 
@@ -27,7 +27,7 @@ If you want to use the latest code, clone the GitHub repository with the followi
 ----
 $ git clone https://github.com/cometd/cometd.git cometd
 $ cd cometd
-$ git checkout 7.0.x
+$ git checkout 8.0.x
 ----
 
 === Performing the Build

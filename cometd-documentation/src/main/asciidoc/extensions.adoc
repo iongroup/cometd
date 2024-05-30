@@ -38,16 +38,16 @@ then for incoming messages the call order is:
 
 [source,java]
 ----
-ExtensionA.incoming(...);
-ExtensionB.incoming(...);
+ExtensionA.incoming();
+ExtensionB.incoming();
 ----
 
 while for outgoing messages the call order is:
 
 [source,java]
 ----
-ExtensionB.outgoing(...);
-ExtensionA.outgoing(...);
+ExtensionB.outgoing();
+ExtensionA.outgoing();
 ----
 
 The next sections describe the JavaScript CometD Extensions; they follow the same pattern the portable JavaScript CometD implementation uses: a portable implementation of the extension with _bindings_ for the specific JavaScript toolkit, currently jQuery.
@@ -67,7 +67,7 @@ If they are present, the CometD implementation invokes them at the proper time.
 
 Writing an extension that logs and counts the long polls is quite easy: you need a reference to the `cometd` object that provides the logging functions (available from `Extension`), and you need only to override the `outgoing()` method:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 import {Extension} from "cometd/Extension.js";
 
@@ -126,7 +126,7 @@ The JavaScript CometD API defines three functions to manage extensions:
 
 Following the example above, you can register the extension like this:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.registerExtension("loggerExt", new LoggerExt());
 ----
@@ -135,7 +135,7 @@ From now on, the meta connect messages are modified to carry the counter from th
 
 Unregistering the extension is similar:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.unregisterExtension("loggerExt");
 ----
@@ -148,7 +148,7 @@ It is not possible to register two extensions under the same name.
 While it is normally good practice to catch exceptions within extension functions, sometimes this is tedious to code, or there is no control about the quality of the extension (for example, it's a third party extension).
 The JavaScript CometD API provides a way to define the global extension exception handler that is invoked every time an extension throws an exception (for example, calling a function on an undefined object):
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.onExtensionException = (exception, extensionName, outgoing, message) => {
     // Uh-oh, something went wrong, disable this extension.
@@ -157,7 +157,7 @@ cometd.onExtensionException = (exception, extensionName, outgoing, message) => {
     // If the message is going to the server, add the error to the message.
     if (outgoing) {
         // Assume you have created the message structure below.
-        var badExtension = message.ext.badExtensions[extensionName];
+        const badExtension = message.ext.badExtensions[extensionName];
         badExtension.exception = exception;
     }
 }

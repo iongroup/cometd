@@ -24,7 +24,7 @@ Calling `handshake()` _does not_ mean that you have completed the handshake with
 
 It is possible to invoke the `handshake()` function passing as parameter a callback function that will be invoked when the handshake message reply from the server arrives to the client (or, in case the server does not reply, when the client detects a handshake failure):
 
-[source,ecmascript6]
+[source,javascript]
 ----
 // Configure.
 cometd.configure({
@@ -32,7 +32,7 @@ cometd.configure({
 });
 
 // Handshake with callback.
-cometd.init(function(handshakeReply) {
+cometd.init((handshakeReply) => {
     if (handshakeReply.successful) {
         // Successfully connected to the server.
         // Now it is possible to subscribe or send messages.
@@ -57,7 +57,7 @@ A corollary of this is that applications should usually only ever call `handshak
 
 Since the `handshake()` call is asynchronous, it is not a good idea to write this code:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 // WRONG CODE
 
@@ -77,7 +77,7 @@ Since the API is asynchronous, you have no way of knowing synchronously (that is
 
 The correct way is the following:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.configure({
     url: "http://localhost:8080/cometd"
@@ -94,14 +94,14 @@ cometd.handshake((handshakeReply) => {
 
 If you want to pass additional information to the handshake message (for example, authentication credentials) you can pass an additional object to the `handshake()` function:
 
-[source,ecmascript6]
+[source,javascript]
 ----
 cometd.configure({
     url: "http://localhost:8080/cometd"
 });
 
 // Handshake with additional information.
-var additional = {
+const additional = {
     "com.acme.credentials": {
         "user": "cometd",
         "token": "xyzsecretabc"
