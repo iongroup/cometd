@@ -4,6 +4,8 @@ updates:
     directory: "/"
     open-pull-requests-limit: 50
     target-branch: "5.0.x"
+    commit-message:
+      prefix: "[5.0.x] "
     schedule:
       interval: "daily"
     ignore:
@@ -30,6 +32,8 @@ updates:
     directory: "/"
     open-pull-requests-limit: 50
     target-branch: "6.0.x"
+    commit-message:
+      prefix: "[6.0.x] "
     schedule:
       interval: "daily"
     ignore:
@@ -46,6 +50,8 @@ updates:
     directory: "/"
     open-pull-requests-limit: 50
     target-branch: "8.0.x"
+    commit-message:
+      prefix: "[8.0.x] "
     schedule:
       interval: "daily"
     ignore:
