@@ -110,7 +110,7 @@ Therefore:
 
 ----
 $ cd $JETTY_BASE
-$ java -jar $JETTY_HOME/start.jar --add-to-start=http,ee10-websocket-jakarta,ee10-deploy
+$ java -jar $JETTY_HOME/start.jar --add-modules=http,ee10-websocket-jakarta,ee10-deploy
 ----
 
 Now Jetty is configured to run CometD applications, and you just need to deploy your `.war` file to Jetty (you can use the CometD demos `.war` file if you have not built your application yet):
