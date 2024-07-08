@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.cometd.client.http;
+package org.cometd.tests;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -24,22 +24,19 @@ import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSessionChannel;
 import org.cometd.client.BayeuxClient;
-import org.cometd.client.http.jetty.JettyHttpClientTransport;
 import org.cometd.client.transport.TransportListener;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-public class ServerRestartTest extends ClientServerTest {
-    @BeforeEach
-    public void init() throws Exception {
-        start(null);
-    }
+public class ServerRestartTest extends AbstractClientServerTest {
+    @ParameterizedTest
+    @MethodSource("transports")
+    public void testServerRestart(Transport transport) throws Exception {
+        start(transport);
 
-    @Test
-    public void testServerRestart() throws Exception {
+        BayeuxClient client = newBayeuxClient(transport);
         AtomicReference<CountDownLatch> sendLatch = new AtomicReference<>(new CountDownLatch(3));
-        BayeuxClient client = new BayeuxClient(cometdURL, new JettyHttpClientTransport(null, httpClient));
         client.addTransportListener(new TransportListener() {
             @Override
             public void onSending(List<? extends Message> messages) {
@@ -50,26 +47,26 @@ public class ServerRestartTest extends ClientServerTest {
         client.setOption(BayeuxClient.BACKOFF_INCREMENT_OPTION, backoffIncrement);
         client.handshake();
 
-        // Be sure the second connect has been sent to the server
+        // Be sure the second connect has been sent to the server.
         Assertions.assertTrue(sendLatch.get().await(5, TimeUnit.SECONDS));
 
-        // Wait a little more
+        // Wait a little more.
         Thread.sleep(1000);
 
         int port = connector.getLocalPort();
         server.stop();
         server.join();
 
-        // Wait a few retries
+        // Wait a few retries.
         Thread.sleep(backoffIncrement + 2 * backoffIncrement + 3 * backoffIncrement);
 
-        // Add listeners to check the behavior of the client
+        // Add listeners to check the behavior of the client.
         CountDownLatch handshakeLatch = new CountDownLatch(1);
         client.getChannel(Channel.META_HANDSHAKE).addListener((ClientSessionChannel.MessageListener)(channel, message) -> handshakeLatch.countDown());
-        CountDownLatch connectLatch = new CountDownLatch(1);
+        CountDownLatch connectLatch = new CountDownLatch(2);
         client.getChannel(Channel.META_CONNECT).addListener((ClientSessionChannel.MessageListener)(channel, message) -> connectLatch.countDown());
-        // Expect handshake and 2 connects messages to be sent
-        sendLatch.set(new CountDownLatch(3));
+        // Expect /meta/connect (session unknown), /meta/handshake, /meta/connect (timeout=0) and /meta/connect (suspended) messages to be sent.
+        sendLatch.set(new CountDownLatch(4));
 
         connector.setPort(port);
         server.start();
