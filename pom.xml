@@ -89,19 +89,19 @@
   </distributionManagement>
 
   <properties>
-    <graalvm-version>24.0.2</graalvm-version>
-    <jackson-version>2.18.0</jackson-version>
+    <graalvm-version>24.1.1</graalvm-version>
+    <jackson-version>2.18.1</jackson-version>
     <jakarta-ee-version>10.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
-    <jetty-version>12.0.14</jetty-version>
+    <jetty-version>12.0.15</jetty-version>
     <!-- end::jetty-version[] -->
     <maven-compiler-plugin-version>3.13.0</maven-compiler-plugin-version>
     <maven-war-plugin-version>3.4.0</maven-war-plugin-version>
     <okhttp-version>4.12.0</okhttp-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>2.0.16</slf4j-version>
-    <spring-boot-version>3.3.4</spring-boot-version>
-    <spring-version>6.1.13</spring-version>
+    <spring-boot-version>3.3.5</spring-boot-version>
+    <spring-version>6.1.14</spring-version>
   </properties>
 
   <dependencyManagement>
@@ -144,7 +144,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>5.11.1</version>
+        <version>5.11.3</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -243,7 +243,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-archetype-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -263,7 +263,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.8.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -321,7 +321,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.20.0</version>
+          <version>3.21.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -331,7 +331,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.5.1</version>
           <configuration>
             <argLine>@{argLine} -showversion -Xmx1g -Xms1g -Xlog:gc* -XX:+PrintCommandLineFlags</argLine>
           </configuration>
@@ -344,12 +344,12 @@
         <plugin>
           <groupId>org.asciidoctor</groupId>
           <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.jetty.ee10</groupId>
