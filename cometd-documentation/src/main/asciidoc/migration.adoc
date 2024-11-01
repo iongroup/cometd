@@ -981,3 +981,50 @@ cometd.configure({
 });
 ----
 |===
+
+[[_migration_80_to_81]]
+=== Migrating from CometD 8.0.x to CometD 8.1.x
+
+==== Jetty Dependency Changes
+
+[cols="1,1", options="header"]
+|===
+| CometD 8.0.x  | CometD 8.1.x
+| Jetty 12.0.x | Jetty 12.1.x
+|===
+
+==== Servlet Specification Changes
+
+[cols="1a,1a", options="header"]
+|===
+| CometD 8.0.x | CometD 8.1.x
+| Servlet 6.0 (Jakarta EE 10) | Servlet 6.1 (Jakarta EE 11)
+|===
+
+==== `web.xml` Changes
+
+[cols="1a,1a", options="header"]
+|===
+| CometD 8.0.x
+| CometD 8.1.x
+
+|
+[source,xml]
+----
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+</web-app>
+----
+|
+[source,xml]
+----
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd" <1>
+         version="6.1"> <2>
+----
+<1> `schemaLocation` attribute changed URI path
+<2> `version` attribute changed from `6.0` to `6.1`
+|===

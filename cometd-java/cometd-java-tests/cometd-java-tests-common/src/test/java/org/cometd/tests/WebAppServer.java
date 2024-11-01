@@ -18,7 +18,8 @@ package org.cometd.tests;
 
 import java.io.Closeable;
 import java.nio.file.Path;
-import org.eclipse.jetty.ee10.webapp.WebAppContext;
+
+import org.eclipse.jetty.ee11.webapp.WebAppContext;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;

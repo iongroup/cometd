@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,8 +44,8 @@ import org.cometd.server.BayeuxServerImpl;
 import org.cometd.server.websocket.jakarta.WebSocketTransport;
 import org.cometd.server.websocket.jetty.JettyWebSocketTransport;
 import org.eclipse.jetty.client.ContentResponse;
-import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
-import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHolder;
 import org.eclipse.jetty.http.HttpCookie;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
@@ -207,7 +208,7 @@ public class BayeuxContextTest extends ClientServerWebSocketTest {
 
         switch (wsType) {
             case WEBSOCKET_JAKARTA, WEBSOCKET_OKHTTP -> {
-                context.insertHandler(new org.eclipse.jetty.ee10.servlet.SessionHandler());
+                context.insertHandler(new org.eclipse.jetty.ee11.servlet.SessionHandler());
                 ((ServletContextHandler)context).addServlet(new ServletHolder(new HttpServlet() {
                     @Override
                     protected void service(HttpServletRequest request, HttpServletResponse response) {

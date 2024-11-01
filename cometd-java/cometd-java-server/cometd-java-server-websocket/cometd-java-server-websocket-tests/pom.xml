@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.cometd.java</groupId>
     <artifactId>cometd-java-server-websocket</artifactId>
-    <version>8.0.7-SNAPSHOT</version>
+    <version>8.1.0-SNAPSHOT</version>
   </parent>
   <artifactId>cometd-java-server-websocket-tests</artifactId>
   <name>CometD :: Java :: Server :: WebSocket :: Tests</name>
@@ -92,20 +92,20 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty.ee10</groupId>
-      <artifactId>jetty-ee10-servlet</artifactId>
+      <groupId>org.eclipse.jetty.ee11</groupId>
+      <artifactId>jetty-ee11-servlet</artifactId>
       <version>${jetty-version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty.ee10.websocket</groupId>
-      <artifactId>jetty-ee10-websocket-jakarta-client</artifactId>
+      <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+      <artifactId>jetty-ee11-websocket-jakarta-client</artifactId>
       <version>${jetty-version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty.ee10.websocket</groupId>
-      <artifactId>jetty-ee10-websocket-jakarta-server</artifactId>
+      <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+      <artifactId>jetty-ee11-websocket-jakarta-server</artifactId>
       <version>${jetty-version}</version>
       <scope>test</scope>
     </dependency>

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cometd</groupId>
   <artifactId>cometd-project</artifactId>
-  <version>8.0.7-SNAPSHOT</version>
+  <version>8.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>CometD</name>
   <description>The CometD project is a scalable web messaging bus that uses WebSocket
@@ -91,9 +91,9 @@
   <properties>
     <graalvm-version>24.1.1</graalvm-version>
     <jackson-version>2.18.1</jackson-version>
-    <jakarta-ee-version>10.0.0</jakarta-ee-version>
+    <jakarta-ee-version>11.0.0-M4</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
-    <jetty-version>12.0.15</jetty-version>
+    <jetty-version>12.1.0.alpha0</jetty-version>
     <!-- end::jetty-version[] -->
     <maven-compiler-plugin-version>3.13.0</maven-compiler-plugin-version>
     <maven-war-plugin-version>3.4.0</maven-war-plugin-version>
@@ -352,8 +352,8 @@
           <version>3.5.0</version>
         </plugin>
         <plugin>
-          <groupId>org.eclipse.jetty.ee10</groupId>
-          <artifactId>jetty-ee10-maven-plugin</artifactId>
+          <groupId>org.eclipse.jetty.ee11</groupId>
+          <artifactId>jetty-ee11-maven-plugin</artifactId>
           <version>${jetty-version}</version>
         </plugin>
         <plugin>

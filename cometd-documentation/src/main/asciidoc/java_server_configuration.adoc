@@ -12,8 +12,8 @@ If you followed xref:_primer[the primer], Maven has configured the `web.xml` fil
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-         version="6.0">
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1">
 
   <servlet>
     <servlet-name>cometd</servlet-name>
@@ -266,7 +266,7 @@ Furthermore, a cross-origin deployment may require a more advanced configuration
 [[_java_server_configuration_advanced_cross_origin_filter]]
 ====== Configuring the `CrossOriginFilter`
 
-Independently of the Servlet Container you are using, Jetty provides a standard, portable, `org.eclipse.jetty.ee10.servlets.CrossOriginFilter`.
+Independently of the Servlet Container you are using, Jetty provides a standard, portable, `org.eclipse.jetty.ee11.servlets.CrossOriginFilter`.
 This filter implements the https://www.w3.org/TR/access-control/[Cross-Origin Resource Sharing] specification, and allows recent browsers that implement it to perform cross-origin JavaScript requests (see also xref:_javascript_transports[the JavaScript transports section]).
 
 Here is an example of `web.xml` configuration for the `CrossOriginFilter`:
@@ -276,8 +276,8 @@ Here is an example of `web.xml` configuration for the `CrossOriginFilter`:
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-         version="6.0">
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1">
 
   <servlet>
     <servlet-name>cometd</servlet-name>
@@ -296,7 +296,7 @@ Here is an example of `web.xml` configuration for the `CrossOriginFilter`:
 
   <filter>
     <filter-name>cross-origin</filter-name>
-    <filter-class>org.eclipse.jetty.ee10.servlets.CrossOriginFilter</filter-class>
+    <filter-class>org.eclipse.jetty.ee11.servlets.CrossOriginFilter</filter-class>
     <async-supported>true</async-supported>
   </filter>
   <filter-mapping>
@@ -345,8 +345,8 @@ For example:
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-         version="6.0"> <!--1-->
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1"> <!--1-->
 
   <servlet>
     <servlet-name>cometd</servlet-name>
@@ -361,7 +361,7 @@ For example:
 
   <filter>
     <filter-name>cross-origin</filter-name>
-    <filter-class>org.eclipse.jetty.ee10.servlets.CrossOriginFilter</filter-class>
+    <filter-class>org.eclipse.jetty.ee11.servlets.CrossOriginFilter</filter-class>
     <async-supported>true</async-supported> <!--2-->
   </filter>
   <filter-mapping>

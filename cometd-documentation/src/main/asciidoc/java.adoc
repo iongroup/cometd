@@ -4,9 +4,9 @@
 
 The CometD Java implementation is based on the popular https://eclipse.org/jetty[Jetty Http Server and Servlet Container], for both the client and the server, version 12 or greater.
 
-=== CometD Java Libraries and Jakarta EE 10 / Servlet 6.0
+=== CometD Java Libraries and Jakarta EE 11 / Servlet 6.1
 
-The CometD Java implementation, though based on Jetty, is based on the standard Jakarta EE 10 / Servlet 6.0 APIs and therefore can be deployed to any Jakarta EE 10 / Servlet 6.0 or greater compliant Servlet Container, leveraging the asynchronous features the Servlet Container offers.
+The CometD Java implementation, though based on Jetty, is based on the standard Jakarta EE 11 / Servlet 6.1 APIs and therefore can be deployed to any Jakarta EE 11 / Servlet 6.1 or greater compliant Servlet Container, leveraging the asynchronous features the Servlet Container offers.
 See also xref:_java_server_configuration_servlet[the Servlet 6.0 configuration section] for further details.
 
 The CometD Java Implementation offers a client library and a server library, which the following sections document in detail.

@@ -4,10 +4,10 @@
 
 === Requirements and Dependencies
 
-In order to run CometD applications, you need the Java Development Kit (JDK) -- version 17 or greater, and a compliant Jakarta EE 10 / Servlet 6.0 or greater Servlet Container such as https://eclipse.org/jetty[Jetty 12].
+In order to run CometD applications, you need the Java Development Kit (JDK) -- version 17 or greater, and a compliant Jakarta EE 11 / Servlet 6.1 or greater Servlet Container such as https://eclipse.org/jetty[Jetty 12].
 
 The CometD implementation depends on few Jetty libraries, such as `jetty-util-ajax-<version>.jar` and others.
-These Jetty dependencies are typically packaged in the `WEB-INF/lib` directory of your application `.war` file, and do not require you to deploy your application `.war` file in Jetty: your CometD-based application will work exactly in the same way in any other compliant Jakarta EE 10 / Servlet 6.0 or greater Servlet Container.
+These Jetty dependencies are typically packaged in the `WEB-INF/lib` directory of your application `.war` file, and do not require you to deploy your application `.war` file in Jetty: your CometD-based application will work exactly in the same way in any other compliant Jakarta EE 11 / Servlet 6.1 or greater Servlet Container.
 
 The current Jetty version CometD depends on by default is:
 
@@ -65,7 +65,7 @@ The browser will display a button or a link to consider the site safe and you wi
 When you develop a CometD application, you develop a standard Java EE Web Application that is then packaged into a `.war` file.
 You can follow xref:_primer[the Primer section] for examples of how to build and package your CometD application.
 
-Once you have your CometD application packaged into a `.war` file, you can deploy it to any Servlet Container that supports Jakarta EE 10 / Servlet 6.0 or greater.
+Once you have your CometD application packaged into a `.war` file, you can deploy it to any Servlet Container that supports Jakarta EE 11 / Servlet 6.1 or greater.
 
 Refer to xref:_java_server_configuration_servlet[this section] for further information and for specific instructions related to deployment on Servlet Containers.
 
@@ -103,14 +103,14 @@ Since Jetty is a highly modular Servlet Container, the `JETTY_BASE` is the direc
 In order to run CometD applications, Jetty needs to be configured minimally with these modules:
 
 * the `http` module, that provides support for the HTTP clear-text protocol
-* the `ee10-websocket-jakarta` module, that provides support for the WebSocket protocol with the Jakarta EE 10 WebSocket APIs
-* the `ee10-deploy` module, that provides support for the deployment of `.war` files
+* the `ee11-websocket-jakarta` module, that provides support for the WebSocket protocol with the Jakarta EE 11 WebSocket APIs
+* the `ee11-deploy` module, that provides support for the deployment of `.war` files
 
 Therefore:
 
 ----
 $ cd $JETTY_BASE
-$ java -jar $JETTY_HOME/start.jar --add-modules=http,ee10-websocket-jakarta,ee10-deploy
+$ java -jar $JETTY_HOME/start.jar --add-modules=http,ee11-websocket-jakarta,ee11-deploy
 ----
 
 Now Jetty is configured to run CometD applications, and you just need to deploy your `.war` file to Jetty (you can use the CometD demos `.war` file if you have not built your application yet):

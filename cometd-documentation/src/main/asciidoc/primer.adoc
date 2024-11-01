@@ -180,7 +180,7 @@ jetty-util-<version>.jar
 jetty-util-ajax-<version>.jar
 
 # Optional Jetty dependency for CrossOriginFilter.
-jetty-ee10-servlets-<version>.jar
+jetty-ee11-servlets-<version>.jar
 
 # SLF4J logging implementation.
 jetty-slf4j-impl-<version>.jar

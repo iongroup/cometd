@@ -43,8 +43,8 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.eclipse.jetty.ee10</groupId>
-        <artifactId>jetty-ee10-maven-plugin</artifactId>
+        <groupId>org.eclipse.jetty.ee11</groupId>
+        <artifactId>jetty-ee11-maven-plugin</artifactId>
         <version>${jetty-version}</version>
         <configuration>
           <scanIntervalSeconds>10</scanIntervalSeconds>
@@ -101,8 +101,8 @@
       <version>${jetty-version}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty.ee10</groupId>
-      <artifactId>jetty-ee10-servlets</artifactId>
+      <groupId>org.eclipse.jetty.ee11</groupId>
+      <artifactId>jetty-ee11-servlets</artifactId>
       <version>${jetty-version}</version>
     </dependency>
     <dependency>

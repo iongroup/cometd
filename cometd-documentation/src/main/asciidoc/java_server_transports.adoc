@@ -30,8 +30,8 @@ HTTP transports may require a more advanced configuration described in xref:_jav
 
 For the `websocket` transport there exist two implementations:
 
-* one based on the standard Jakarta EE 10 APIs.
-  If these APIs are available, CometD will use a `websocket` transport based on the standard Jakarta EE 10 WebSocket APIs, whose implementation class is named `org.cometd.server.websocket.jakarta.WebSocketTransport`
+* one based on the standard Jakarta EE 11 APIs.
+  If these APIs are available, CometD will use a `websocket` transport based on the standard Jakarta EE 11 WebSocket APIs, whose implementation class is named `org.cometd.server.websocket.jakarta.WebSocketTransport`
 * one based on the Jetty WebSocket APIs, whose implementation class is named `org.cometd.server.websocket.jetty.JettyWebSocketTransport`.
   CometD will _not_ attempt to use this transport automatically; applications that want to make use of the extra features provided by this transport must explicitly configure it (typically along with an HTTP transport such as `long-polling`) using the `transports` parameter as described in xref:_java_server_configuration[the server configuration section].
 
@@ -45,7 +45,7 @@ It is possible to use the `websocket` _client_ transport on the server (for exam
 For example, it is possible to have a client communicating via HTTP to a CometD web application running in Tomcat, which communicates via WebSocket to another CometD web application running in Jetty.
 ====
 
-The CometD server tries to look up the Jakarta EE 10 WebSocket APIs via reflection on startup; if they are available, then it creates the `websocket` transport based on the Jakarta EE 10 WebSocket APIs.
+The CometD server tries to look up the Jakarta EE 11 WebSocket APIs via reflection on startup; if they are available, then it creates the `websocket` transport based on the Jakarta EE 11 WebSocket APIs.
 
 [IMPORTANT]
 ====
