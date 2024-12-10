@@ -29,6 +29,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -130,10 +131,10 @@ public class OkHttpWebSocketTransport extends AbstractWebSocketTransport {
             upgradeRequest.addHeader(SEC_WEBSOCKET_EXTENSIONS_HEADER, "permessage-deflate");
         }
         List<HttpCookie> cookies = getCookies(URI.create(uri));
-        for (HttpCookie cookie : cookies) {
-            String cookieValue = cookie.getName() + "=" + cookie.getValue();
-            upgradeRequest.addHeader(COOKIE_HEADER, cookieValue);
-        }
+        String allCookies = cookies.stream()
+                .map(cookie -> cookie.getName() + "=" + cookie.getValue())
+                .collect(Collectors.joining("; "));
+        upgradeRequest.addHeader(COOKIE_HEADER, allCookies);
     }
 
     protected void onHandshakeResponse(Response response) {
