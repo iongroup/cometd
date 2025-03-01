@@ -1,5 +1,5 @@
 import { Extension } from "./cometd";
 
-export class AckExtension implements Extension {
-    constructor();
+declare class AckExtension implements Extension {
 }
+export= AckExtension;

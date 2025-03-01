@@ -1,5 +1,5 @@
 import { Extension } from "./cometd";
 
-export class ReloadExtension implements Extension {
-    constructor();
+declare class ReloadExtension implements Extension {
 }
+export= ReloadExtension;

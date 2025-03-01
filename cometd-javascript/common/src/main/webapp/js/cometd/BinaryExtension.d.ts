@@ -1,5 +1,5 @@
 import { Extension } from "./cometd";
 
-export class BinaryExtension implements Extension {
-    constructor();
+declare class BinaryExtension implements Extension {
 }
+export= BinaryExtension;

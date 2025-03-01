@@ -1,5 +1,5 @@
 import { Extension } from "./cometd";
 
-export class TimeSyncExtension implements Extension {
-    constructor();
+declare class TimeSyncExtension implements Extension {
 }
+export= TimeSyncExtension;
