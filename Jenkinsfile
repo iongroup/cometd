@@ -10,27 +10,35 @@ pipeline {
 
   stages {
     stage('CometD Builds') {
-      matrix {
-        axes {
-          axis {
-            name 'JDK'
-            values 'jdk17', 'jdk21', 'jdk23'
+      parallel {
+        stage('Build CometD Java 17') {
+          agent { node { label 'linux-light' } }
+          steps {
+            timeout(time: 1, unit: 'HOURS') {
+              mavenBuild("jdk17", "clean install")
+            }
+            timeout(time: 15, unit: 'MINUTES') {
+              mavenBuild("jdk17", "javadoc:javadoc")
+            }
+            recordIssues id: "analysis-jdk17", name: "Static Analysis jdk17", aggregatingResults: true, enabledForFailure: true,
+                         tools: [mavenConsole(), java(), checkStyle(), javaDoc()], skipPublishingChecks: true, skipBlames: true
+            recordCoverage name: "Coverage jdk17", id: "coverage-jdk17", tools: [[parser: 'JACOCO']], sourceCodeRetention: 'LAST_BUILD',
+                            sourceDirectories: [[path: 'src/main/java']]
           }
         }
-        stages {
-          stage('Build CometD') {
-            agent { node { label 'linux-light' } }
-            steps {
-              timeout(time: 1, unit: 'HOURS') {
-                mavenBuild("${env.JDK}", "clean install")
-              }
-              timeout(time: 15, unit: 'MINUTES') {
-                mavenBuild("${env.JDK}", "javadoc:javadoc")
-              }
-              recordIssues id: "analysis-${env.JDK}", name: "Static Analysis ${env.JDK}", aggregatingResults: true, enabledForFailure: true,
-                           tools: [mavenConsole(), java(), checkStyle(), javaDoc()], skipPublishingChecks: true, skipBlames: true
-              recordCoverage name: "Coverage ${env.JDK}", id: "coverage-${env.JDK}", tools: [[parser: 'JACOCO']], sourceCodeRetention: 'LAST_BUILD',
-                              sourceDirectories: [[path: 'src/main/java']]
+        stage('Build CometD Java 21') {
+          agent { node { label 'linux-light' } }
+          steps {
+            timeout(time: 1, unit: 'HOURS') {
+              mavenBuild("jdk21", "clean install")
+            }
+          }
+        }
+        stage('Build CometD Java 24') {
+          agent { node { label 'linux-light' } }
+          steps {
+            timeout(time: 1, unit: 'HOURS') {
+              mavenBuild("jdk24", "clean install")
             }
           }
         }
