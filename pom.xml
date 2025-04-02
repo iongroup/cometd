@@ -89,19 +89,19 @@
   </distributionManagement>
 
   <properties>
-    <graalvm-version>24.1.2</graalvm-version>
+    <graalvm-version>24.2.0</graalvm-version>
     <jackson-version>2.18.3</jackson-version>
     <jakarta-ee-version>10.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
-    <jetty-version>12.0.18</jetty-version>
+    <jetty-version>12.0.19</jetty-version>
     <!-- end::jetty-version[] -->
     <maven-compiler-plugin-version>3.14.0</maven-compiler-plugin-version>
     <maven-war-plugin-version>3.4.0</maven-war-plugin-version>
     <okhttp-version>4.12.0</okhttp-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>2.0.17</slf4j-version>
-    <spring-boot-version>3.4.3</spring-boot-version>
-    <spring-version>6.2.4</spring-version>
+    <spring-boot-version>3.4.4</spring-boot-version>
+    <spring-version>6.2.5</spring-version>
   </properties>
 
   <dependencyManagement>
@@ -144,7 +144,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>5.12.0</version>
+        <version>5.12.1</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -228,7 +228,7 @@
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <version>4.6</version>
+          <version>5.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -331,7 +331,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.2</version>
+          <version>3.5.3</version>
           <configuration>
             <argLine>@{argLine} -showversion -Xmx1g -Xms1g -Xlog:gc* -XX:+PrintCommandLineFlags</argLine>
           </configuration>
@@ -344,7 +344,7 @@
         <plugin>
           <groupId>org.asciidoctor</groupId>
           <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
