@@ -512,6 +512,7 @@
           <publishingServerId>central</publishingServerId>
           <autoPublish>false</autoPublish>
           <waitUntil>validated</waitUntil>
+          <excludeArtifacts>cometd-documentation,cometd-java-benchmark</excludeArtifacts>
         </configuration>
       </plugin>
     </plugins>
