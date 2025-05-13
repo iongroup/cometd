@@ -513,15 +513,17 @@
           <publishingServerId>central</publishingServerId>
           <autoPublish>false</autoPublish>
           <waitUntil>validated</waitUntil>
-          <excludeArtifacts>cometd-documentation,
-            cometd-java-benchmark,
-            cometd-java-benchmark-client,
-            cometd-java-benchmark-common,
-            cometd-java-benchmark-server,
-            cometd-java-examples,
-            cometd-java-examples-embedded,
-            cometd-java-examples-springboot,
-            cometd-javascript-tests</excludeArtifacts>
+          <excludeArtifacts>
+            <excludeArtifact>cometd-documentation</excludeArtifact>
+            <excludeArtifact>cometd-java-benchmark</excludeArtifact>
+            <excludeArtifact>cometd-java-benchmark-client</excludeArtifact>
+            <excludeArtifact>cometd-java-benchmark-common</excludeArtifact>
+            <excludeArtifact>cometd-java-benchmark-server</excludeArtifact>
+            <excludeArtifact>cometd-java-examples</excludeArtifact>
+            <excludeArtifact>cometd-java-examples-embedded</excludeArtifact>
+            <excludeArtifact>cometd-java-examples-springboot</excludeArtifact>
+            <excludeArtifact>cometd-javascript-tests</excludeArtifact>
+          </excludeArtifacts>
         </configuration>
       </plugin>
     </plugins>
