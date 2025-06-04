@@ -3,42 +3,47 @@
 pipeline {
   agent none
   // Save some I/O during the build.
-  options { 
-    durabilityHint('PERFORMANCE_OPTIMIZED') 
-    buildDiscarder logRotator( numToKeepStr: '50' )
+  options {
+    durabilityHint("PERFORMANCE_OPTIMIZED")
+    buildDiscarder logRotator( numToKeepStr: "5" )
   }
 
   stages {
-    stage('CometD Builds') {
+    stage("CometD Builds") {
       parallel {
-        stage('Build CometD Java 17') {
-          agent { node { label 'linux-light' } }
+        stage("Javadocs") {
+          agent { node { label "linux-light" } }
           steps {
-            timeout(time: 1, unit: 'HOURS') {
-              mavenBuild("jdk17", "clean install")
+            timeout(time: 15, unit: "MINUTES") {
+              mavenBuild("jdk24", "javadoc:javadoc")
             }
-            timeout(time: 15, unit: 'MINUTES') {
-              mavenBuild("jdk17", "javadoc:javadoc")
-            }
-            recordIssues id: "analysis-jdk17", name: "Static Analysis jdk17", aggregatingResults: true, enabledForFailure: true,
-                         tools: [mavenConsole(), java(), checkStyle(), javaDoc()], skipPublishingChecks: true, skipBlames: true
-            recordCoverage name: "Coverage jdk17", id: "coverage-jdk17", tools: [[parser: 'JACOCO']], sourceCodeRetention: 'LAST_BUILD',
-                            sourceDirectories: [[path: 'src/main/java']]
           }
         }
-        stage('Build CometD Java 21') {
-          agent { node { label 'linux-light' } }
+        stage("Java 24") {
+          agent { node { label "linux-light" } }
           steps {
-            timeout(time: 1, unit: 'HOURS') {
+            timeout(time: 1, unit: "HOURS") {
+              mavenBuild("jdk24", "clean install")
+              recordIssues id: "analysis", name: "Static Analysis", aggregatingResults: true, enabledForFailure: true,
+                      tools: [mavenConsole(), java(), checkStyle(), javaDoc()], skipPublishingChecks: true, skipBlames: true
+              recordCoverage name: "Coverage", id: "coverage", tools: [[parser: "JACOCO"]], sourceCodeRetention: "LAST_BUILD",
+                      sourceDirectories: [[path: "src/main/java"]]
+            }
+          }
+        }
+        stage("Java 21") {
+          agent { node { label "linux-light" } }
+          steps {
+            timeout(time: 1, unit: "HOURS") {
               mavenBuild("jdk21", "clean install")
             }
           }
         }
-        stage('Build CometD Java 24') {
-          agent { node { label 'linux-light' } }
+        stage("Java 17") {
+          agent { node { label "linux-light" } }
           steps {
-            timeout(time: 1, unit: 'HOURS') {
-              mavenBuild("jdk24", "clean install")
+            timeout(time: 1, unit: "HOURS") {
+              mavenBuild("jdk17", "clean install")
             }
           }
         }
@@ -59,13 +64,13 @@ def mavenBuild(jdk, cmdline) {
       withEnv(["JAVA_HOME=${tool "$jdk"}",
                "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin",
                "MAVEN_OPTS=-Xms2g -Xmx4g -Djava.awt.headless=true"]) {
-        configFileProvider([configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {
+        configFileProvider([configFile(fileId: "oss-settings.xml", variable: "GLOBAL_MVN_SETTINGS")]) {
           sh "mvn -s $GLOBAL_MVN_SETTINGS -Dmaven.repo.local=.repository -V -B -e $cmdline"
         }
       }
     }
     finally {
-      junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml'
+      junit testResults: "**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml"
     }
   }
 }
