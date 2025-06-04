@@ -15,7 +15,7 @@ pipeline {
           agent { node { label "linux-light" } }
           steps {
             timeout(time: 15, unit: "MINUTES") {
-              mavenBuild("jdk24", "javadoc:javadoc")
+              mavenBuild("jdk24", "clean compile javadoc:javadoc", false)
             }
           }
         }
@@ -23,7 +23,7 @@ pipeline {
           agent { node { label "linux-light" } }
           steps {
             timeout(time: 1, unit: "HOURS") {
-              mavenBuild("jdk24", "clean install")
+              mavenBuild("jdk24", "clean install", true)
               recordIssues id: "analysis", name: "Static Analysis", aggregatingResults: true, enabledForFailure: true,
                       tools: [mavenConsole(), java(), checkStyle(), javaDoc()], skipPublishingChecks: true, skipBlames: true
               recordCoverage name: "Coverage", id: "coverage", tools: [[parser: "JACOCO"]], sourceCodeRetention: "LAST_BUILD",
@@ -35,7 +35,7 @@ pipeline {
           agent { node { label "linux-light" } }
           steps {
             timeout(time: 1, unit: "HOURS") {
-              mavenBuild("jdk21", "clean install")
+              mavenBuild("jdk21", "clean install", true)
             }
           }
         }
@@ -43,7 +43,7 @@ pipeline {
           agent { node { label "linux-light" } }
           steps {
             timeout(time: 1, unit: "HOURS") {
-              mavenBuild("jdk17", "clean install")
+              mavenBuild("jdk17", "clean install", true)
             }
           }
         }
@@ -58,7 +58,7 @@ pipeline {
  * @param cmdline the command line in "<profiles> <goals> <properties>"`format.
  * @param consoleParsers array of console parsers to run
  */
-def mavenBuild(jdk, cmdline) {
+def mavenBuild(jdk, cmdline, withTests) {
   script {
     try {
       withEnv(["JAVA_HOME=${tool "$jdk"}",
@@ -70,7 +70,9 @@ def mavenBuild(jdk, cmdline) {
       }
     }
     finally {
-      junit testResults: "**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml"
+      if (withTests) {
+        junit testResults: "**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml"
+      }
     }
   }
 }
