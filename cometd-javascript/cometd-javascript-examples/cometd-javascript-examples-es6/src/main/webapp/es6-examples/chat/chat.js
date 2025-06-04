@@ -120,7 +120,9 @@ class Chat {
             logLevel: "debug"
         });
         this.#cometd.websocketEnabled = false;
-        this.#cometd.unregisterTransport("long-polling");
+        if (location.protocol === "http:") {
+            this.#cometd.unregisterTransport("long-polling");
+        }
         this.#cometd.handshake();
 
         _hide(_id("join"));

@@ -77,14 +77,12 @@
 
   <distributionManagement>
     <repository>
-      <id>oss.sonatype.org</id>
-      <name>CometD Maven2 Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+      <id>sonatype-cp</id>
+      <url>https://repo.maven.apache.org/maven2</url>
     </repository>
     <snapshotRepository>
-      <id>oss.sonatype.org</id>
-      <name>CometD Maven2 Snapshot Repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <id>sonatype-cp</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -93,15 +91,17 @@
     <jackson-version>2.18.3</jackson-version>
     <jakarta-ee-version>11.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
-    <jetty-version>12.1.0.alpha2</jetty-version>
+    <jetty-version>12.1.0.beta0</jetty-version>
     <!-- end::jetty-version[] -->
     <maven-compiler-plugin-version>3.14.0</maven-compiler-plugin-version>
     <maven-war-plugin-version>3.4.0</maven-war-plugin-version>
+    <njord.autoPublish>true</njord.autoPublish>
+    <njord.version>0.7.1</njord.version>
     <okhttp-version>4.12.0</okhttp-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>2.0.17</slf4j-version>
-    <spring-boot-version>3.4.5</spring-boot-version>
-    <spring-version>6.2.6</spring-version>
+    <spring-boot-version>3.5.0</spring-boot-version>
+    <spring-version>6.2.7</spring-version>
   </properties>
 
   <dependencyManagement>
@@ -144,7 +144,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>5.12.2</version>
+        <version>5.13.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -171,51 +171,6 @@
     </dependency>
   </dependencies>
 
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>jetty-snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/jetty-snapshots</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jetty-staging</id>
-      <url>https://oss.sonatype.org/content/groups/jetty-with-staging</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>jetty-snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/jetty-snapshots</url>
-    </pluginRepository>
-    <pluginRepository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>jetty-staging</id>
-      <url>https://oss.sonatype.org/content/groups/jetty-with-staging</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <build>
     <defaultGoal>install</defaultGoal>
     <pluginManagement>
@@ -223,12 +178,17 @@
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
-          <version>2.44.4</version>
+          <version>2.44.5</version>
         </plugin>
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
           <version>5.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>eu.maveniverse.maven.plugins</groupId>
+          <artifactId>njord</artifactId>
+          <version>${njord.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
@@ -243,7 +203,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-archetype-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -253,7 +213,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -349,7 +309,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.5.1</version>
         </plugin>
         <plugin>
           <groupId>org.eclipse.jetty.ee11</groupId>
@@ -555,6 +515,13 @@
         </executions>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>eu.maveniverse.maven.njord</groupId>
+        <artifactId>extension</artifactId>
+        <version>${njord.version}</version>
+      </extension>
+    </extensions>
   </build>
 
   <profiles>
