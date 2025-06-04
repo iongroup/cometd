@@ -15,7 +15,7 @@ pipeline {
           agent { node { label "linux-light" } }
           steps {
             timeout(time: 15, unit: "MINUTES") {
-              mavenBuild("jdk24", "javadoc:javadoc")
+              mavenBuild("jdk24", "clean compile javadoc:javadoc")
             }
           }
         }
