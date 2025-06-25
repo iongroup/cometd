@@ -13,7 +13,9 @@
 
   <modules>
     <module>cometd-java-examples-embedded</module>
-    <module>cometd-java-examples-springboot</module>
+    <!-- TODO: re-enable when Spring Boot 4.0.x is released.
+    Disabled because not compatible with Jetty 12.1.x yet.
+    <module>cometd-java-examples-springboot</module> -->
   </modules>
 
   <properties>
