@@ -87,8 +87,8 @@
   </distributionManagement>
 
   <properties>
-    <graalvm-version>24.2.0</graalvm-version>
-    <jackson-version>2.18.3</jackson-version>
+    <graalvm-version>24.2.1</graalvm-version>
+    <jackson-version>2.19.1</jackson-version>
     <jakarta-ee-version>11.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
     <jetty-version>12.1.0.beta0</jetty-version>
@@ -96,12 +96,12 @@
     <maven-compiler-plugin-version>3.14.0</maven-compiler-plugin-version>
     <maven-war-plugin-version>3.4.0</maven-war-plugin-version>
     <njord.autoPublish>true</njord.autoPublish>
-    <njord.version>0.7.1</njord.version>
+    <njord.version>0.7.5</njord.version>
     <okhttp-version>4.12.0</okhttp-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>2.0.17</slf4j-version>
-    <spring-boot-version>3.5.0</spring-boot-version>
-    <spring-version>6.2.7</spring-version>
+    <spring-boot-version>3.5.3</spring-boot-version>
+    <spring-version>6.2.8</spring-version>
   </properties>
 
   <dependencyManagement>
@@ -144,7 +144,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
-        <version>5.13.0</version>
+        <version>5.13.2</version>
         <scope>test</scope>
       </dependency>
       <dependency>
