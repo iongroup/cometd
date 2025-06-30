@@ -22,6 +22,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import org.cometd.bayeux.Channel;
+import org.cometd.bayeux.Promise;
 import org.cometd.bayeux.client.ClientSessionChannel;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.bayeux.server.ConfigurableServerChannel;
@@ -32,6 +34,8 @@ import org.cometd.bayeux.server.ServerSession;
 import org.cometd.server.BayeuxServerImpl;
 import org.cometd.server.ServerChannelImpl;
 import org.cometd.server.ServerSessionImpl;
+import org.cometd.server.ext.AcknowledgedMessagesExtension;
+import org.cometd.server.ext.AcknowledgedMessagesSessionExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +43,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -82,15 +88,23 @@ public class BayeuxServerTest {
     }
 
     @Test
-    public void testDumpDateTime() {
-        String prefix = "dump datetime=";
-        String suffix = "\n";
+    public void testDumpExtensionsAndListeners() {
+        _bayeux.setDetailedDump(true);
+        _bayeux.addExtension(new AcknowledgedMessagesExtension());
+
+        ServerMessage.Mutable hs = _bayeux.newMessage();
+        hs.setId("1");
+        hs.setChannel(Channel.META_HANDSHAKE);
+        hs.put("supportedConnectionTypes", List.of("long-polling"));
+        hs.getExt(true).put("ack", true);
+
+        _bayeux.handle(_bayeux.newServerSession(), hs, Promise.noop());
+
         String dump = _bayeux.dump();
-        int idx = dump.indexOf(prefix);
-        Assertions.assertNotEquals(-1, idx);
-        String dateTimeZulu = dump.substring(idx + prefix.length(), dump.indexOf(suffix, idx));
-        assertTrue(dateTimeZulu.contains("T"));
-        assertTrue(dateTimeZulu.endsWith("Z"));
+        assertTrue(dump.lines().anyMatch(line -> line.matches("^\\+> extensions size=.*")));
+        assertTrue(dump.lines().anyMatch(line -> line.matches("^\\+> listeners size=.*")));
+        assertThat(dump, containsString(ServerSessionImpl.class.getSimpleName()));
+        assertThat(dump, containsString(AcknowledgedMessagesSessionExtension.class.getSimpleName()));
     }
 
     @ParameterizedTest

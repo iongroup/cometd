@@ -185,9 +185,9 @@ public class AcknowledgedMessagesSessionExtension implements Extension, ServerSe
             }
         }
         if (reply != null) {
-            long batch = _batches.remove(reply.getId());
             _session.getLock().lock();
             try {
+                long batch = _batches.remove(reply.getId());
                 if (_logger.isDebugEnabled()) {
                     _logger.debug("Dequeuing {}/{} messages until batch {} for {} on {}", queue.size(), _queue.size(), batch, reply, _session);
                 }
@@ -240,5 +240,14 @@ public class AcknowledgedMessagesSessionExtension implements Extension, ServerSe
     // Used only in tests.
     public BatchArrayQueue<ServerMessage> getBatchArrayQueue() {
         return _queue;
+    }
+
+    @Override
+    public String toString() {
+        return "%s@%x[%s]".formatted(
+                getClass().getSimpleName(),
+                hashCode(),
+                getBatchArrayQueue()
+        );
     }
 }

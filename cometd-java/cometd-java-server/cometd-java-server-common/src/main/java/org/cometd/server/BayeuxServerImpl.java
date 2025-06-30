@@ -578,7 +578,7 @@ public class BayeuxServerImpl extends ContainerLifeCycle implements BayeuxServer
 
     private MarkedReference<ServerSessionImpl> removeServerSession(ServerSession session, ServerMessage message, boolean timeout) {
         if (_logger.isDebugEnabled()) {
-            _logger.debug("Removing session timeout: {}, {}, message: {}", timeout, session, message);
+            _logger.debug("Removing session, timeout={}, {}, message: {}", timeout, session, message);
         }
 
         ServerSessionImpl removed = _sessions.remove(session.getId());
@@ -1322,8 +1322,6 @@ public class BayeuxServerImpl extends ContainerLifeCycle implements BayeuxServer
         long beginNanos = NanoTime.now();
         List<Object> children = new ArrayList<>();
 
-        children.add("dump datetime=" + Instant.now());
-
         SecurityPolicy securityPolicy = getSecurityPolicy();
         if (securityPolicy != null) {
             children.add(securityPolicy);
@@ -1336,6 +1334,20 @@ public class BayeuxServerImpl extends ContainerLifeCycle implements BayeuxServer
                     .collect(Collectors.toList());
         }
         children.add(new DumpableCollection("transports", transports));
+
+        List<Extension> extensions = _extensions;
+        if (isDetailedDump()) {
+            children.add(new DumpableCollection("extensions", extensions));
+        } else {
+            children.add("extensions size=" + extensions.size());
+        }
+
+        List<BayeuxServerListener> listeners = _listeners;
+        if (isDetailedDump()) {
+            children.add(new DumpableCollection("listeners", listeners));
+        } else {
+            children.add("listeners size=" + listeners.size());
+        }
 
         if (isDetailedDump()) {
             children.add(new DumpableCollection("channels", new TreeMap<>(_channels).values()));

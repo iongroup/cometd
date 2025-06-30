@@ -25,6 +25,25 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * <p>A concurrent queue that groups elements in batches.</p>
+ * <p>The elements are stored in a growable circular array
+ * along with their batch number:</p>
+ * <pre>{@code
+ *           head             tail
+ *             |               |
+ * elements: [E1, E2, E3, E4, E5]
+ * batches : [ 1,  1,  2,  3,  3]
+ * }</pre>
+ * <p>Elements {@code E1} and {@code E2} belong to batch {@code 1},
+ * only element {@code E3} belongs to batch {@code 2}, etc.</p>
+ * <p>The batch can be "closed" and a new one "opened" by calling
+ * {@link #nextBatch()}.</p>
+ * <p>The elements can be copied with {@link #exportMessagesToBatch(Queue, long)}
+ * into a different queue, and removed with {@link #clearToBatch(long)}.</p>
+ *
+ * @param <T> the type of elements
+ */
 public class BatchArrayQueue<T> implements Queue<T> {
     private final Lock lock;
     private T[] elements;
@@ -42,6 +61,14 @@ public class BatchArrayQueue<T> implements Queue<T> {
         this.batch = 1;
     }
 
+    /**
+     * <p>Adds the given element to this queue,
+     * under the current batch as returned by
+     * {@link #getBatch()}.</p>
+     *
+     * @param t the element to add
+     * @return {@code true}
+     */
     @Override
     public boolean offer(T t) {
         lock.lock();
@@ -294,6 +321,10 @@ public class BatchArrayQueue<T> implements Queue<T> {
         }
     }
 
+    /**
+     * <p>Removes all the elements from this queue
+     * and resets the batch number to {@code 1}.</p>
+     */
     @Override
     public void clear() {
         lock.lock();
@@ -307,6 +338,9 @@ public class BatchArrayQueue<T> implements Queue<T> {
         }
     }
 
+    /**
+     * @return the current batch number
+     */
     public long getBatch() {
         lock.lock();
         try {
@@ -316,6 +350,11 @@ public class BatchArrayQueue<T> implements Queue<T> {
         }
     }
 
+    /**
+     * <p>Closes the current batch and starts a new batch.</p>
+     * <p>The next element offered to this queue will belong
+     * to the new batch.</p>
+     */
     public void nextBatch() {
         lock.lock();
         try {
@@ -325,6 +364,27 @@ public class BatchArrayQueue<T> implements Queue<T> {
         }
     }
 
+    /**
+     * <p>Removes all the elements up to the given batch number.</p>
+     * <p>For example, given:</p>
+     * <pre>{@code
+     *           head             tail
+     *             |               |
+     * elements: [E1, E2, E3, E4, E5]
+     * batches : [ 1,  1,  2,  3,  3]
+     * }</pre>
+     * <p>then calling {@code clearToBatch(1)} would leave the queue
+     * in this state:</p>
+     * <pre>{@code
+     *                        head   tail
+     *                         |       |
+     * elements: [null, null, E3, E4, E5]
+     * batches : [   0,    0,  2,  3,  3]
+     * }</pre>
+     *
+     * @param batch the batch number
+     * @see #exportMessagesToBatch(Queue, long)
+     */
     public void clearToBatch(long batch) {
         lock.lock();
         try {
@@ -373,5 +433,15 @@ public class BatchArrayQueue<T> implements Queue<T> {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "%s@%x[batch=%d,size=%d]".formatted(
+                getClass().getSimpleName(),
+                hashCode(),
+                getBatch(),
+                size()
+        );
     }
 }

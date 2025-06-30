@@ -92,7 +92,7 @@ public class AcknowledgedMessagesExtension implements Extension {
      */
     public interface Listener {
         /**
-         * <p>Callback method invoked when a batch of message is about to be sent to a client session.</p>
+         * <p>Callback method invoked when a batch of messages is about to be sent to a client session.</p>
          *
          * @param session  the session
          * @param messages the messages to send, as an immutable list
