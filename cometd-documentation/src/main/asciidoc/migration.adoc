@@ -42,11 +42,11 @@ Only the WebSocket artifacts have changed.
 | CometD 2.x
 | CometD 3.0.x
 
-| `org.cometd.java:cometd-websocket-jetty`
-| `org.cometd.java:cometd-java-websocket-javax-server` (Javax WebSocket Server)
-| `org.cometd.java:cometd-java-websocket-jetty-server` (Jetty WebSocket Server)
-| `org.cometd.java:cometd-java-websocket-javax-client` (Javax WebSocket Client)
-| `org.cometd.java:cometd-java-websocket-jetty-client` (Jetty WebSocket Client)
+| `org.cometd.java:cometd-websocket-jetty` (Both Client and Server)
+| `org.cometd.java:cometd-java-websocket-javax-client` (Javax WebSocket Client) +
+  `org.cometd.java:cometd-java-websocket-jetty-client` (Jetty WebSocket Client) +
+  `org.cometd.java:cometd-java-websocket-javax-server` (Javax WebSocket Server) +
+  `org.cometd.java:cometd-java-websocket-jetty-server` (Jetty WebSocket Server) +
 |===
 
 ==== `web.xml` Changes
