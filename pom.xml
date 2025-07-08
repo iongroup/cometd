@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.cometd</groupId>
   <artifactId>cometd-project</artifactId>
-  <version>8.1.0-SNAPSHOT</version>
+  <version>8.0.9</version>
   <packaging>pom</packaging>
   <name>CometD</name>
   <description>The CometD project is a scalable web messaging bus that uses WebSocket
@@ -66,7 +66,7 @@
   <scm>
     <connection>scm:git:git://github.com/cometd/cometd.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/cometd/cometd.git</developerConnection>
-    <tag>8.0.5</tag>
+    <tag>8.0.9</tag>
     <url>https://github.com/cometd/cometd</url>
   </scm>
 
@@ -89,9 +89,9 @@
   <properties>
     <graalvm-version>24.2.1</graalvm-version>
     <jackson-version>2.19.1</jackson-version>
-    <jakarta-ee-version>11.0.0</jakarta-ee-version>
+    <jakarta-ee-version>10.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
-    <jetty-version>12.1.0.beta1</jetty-version>
+    <jetty-version>12.0.23</jetty-version>
     <!-- end::jetty-version[] -->
     <maven-compiler-plugin-version>3.14.0</maven-compiler-plugin-version>
     <maven-war-plugin-version>3.4.0</maven-war-plugin-version>
@@ -101,7 +101,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>2.0.17</slf4j-version>
     <spring-boot-version>3.5.3</spring-boot-version>
-    <spring-version>7.0.0-M6</spring-version>
+    <spring-version>6.2.8</spring-version>
   </properties>
 
   <dependencyManagement>
@@ -312,8 +312,8 @@
           <version>3.5.1</version>
         </plugin>
         <plugin>
-          <groupId>org.eclipse.jetty.ee11</groupId>
-          <artifactId>jetty-ee11-maven-plugin</artifactId>
+          <groupId>org.eclipse.jetty.ee10</groupId>
+          <artifactId>jetty-ee10-maven-plugin</artifactId>
           <version>${jetty-version}</version>
         </plugin>
         <plugin>

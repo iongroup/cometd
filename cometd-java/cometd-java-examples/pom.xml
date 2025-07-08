@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.cometd.java</groupId>
     <artifactId>cometd-java</artifactId>
-    <version>8.1.0-SNAPSHOT</version>
+    <version>8.0.9</version>
   </parent>
   <artifactId>cometd-java-examples</artifactId>
   <packaging>pom</packaging>
@@ -13,9 +13,7 @@
 
   <modules>
     <module>cometd-java-examples-embedded</module>
-    <!-- TODO: re-enable when Spring Boot 4.0.x is released.
-    Disabled because not compatible with Jetty 12.1.x yet.
-    <module>cometd-java-examples-springboot</module> -->
+    <module>cometd-java-examples-springboot</module>
   </modules>
 
   <properties>
