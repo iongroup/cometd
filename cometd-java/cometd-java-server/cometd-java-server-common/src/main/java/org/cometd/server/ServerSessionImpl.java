@@ -275,6 +275,8 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
 
     private void deliver2(ServerSession sender, ServerMessage.Mutable message, Promise<Boolean> promise) {
         Boolean wakeup = enqueueMessage(sender, message);
+        if (_logger.isDebugEnabled())
+            _logger.debug("Enqueued wakeup={} {} for {}", wakeup == null ? "drop" : String.valueOf(wakeup), message, this);
         if (wakeup == null) {
             promise.succeed(false);
         } else {
@@ -1067,12 +1069,23 @@ public class ServerSessionImpl implements ServerSession, Dumpable {
 
     @Override
     public void dump(Appendable out, String indent) throws IOException {
+        List<Object> children = new ArrayList<>();
+
+        List<Extension> extensions = _extensions;
+        if (_bayeux.isDetailedDump()) {
+            children.add(new DumpableCollection("extensions", extensions));
+        } else {
+            children.add("extensions size=" + extensions.size());
+        }
+
         List<ServerSessionListener> listeners = _listeners;
         if (_bayeux.isDetailedDump()) {
-            Dumpable.dumpObjects(out, indent, this, new DumpableCollection("listeners", listeners));
+            children.add(new DumpableCollection("listeners", listeners));
         } else {
-            Dumpable.dumpObjects(out, indent, this, "listeners size=" + listeners.size());
+            children.add("listeners size=" + listeners.size());
         }
+
+        Dumpable.dumpObjects(out, indent, this, children.toArray());
     }
 
     @Override

@@ -38,13 +38,11 @@ Below the manual steps that needs to be done to finish the release process.
 [[_release_repository]]
 === Managing the Repository
 
-Login to https://oss.sonatype.org[Sonatype OSS].
+Login to the https://central.sonatype.com/publishing[Maven Central Repository].
 
-Click on "Staging Repositories" and you should see the staged project just uploaded by the `mvn release:perform` command issued above, with status "open".
-Tick the checkbox correspondent to the open staged project, choose "Close", then click on the "Close" button.
-This will make the staged project downloadable for testing, but not yet published to the Maven Central Repository.
+Click on https://central.sonatype.com/publishing["Publish"] and you should see the staged project just uploaded by the `mvn release:perform` command issued above.
 
-Tick again the checkbox correspondent to the closed staged project, choose "Release" from the toolbar, then click on the "Release" button.
+Click on the "Publish" button.
 This will publish the project to the Maven Central Repository.
 
 [[_release_github]]

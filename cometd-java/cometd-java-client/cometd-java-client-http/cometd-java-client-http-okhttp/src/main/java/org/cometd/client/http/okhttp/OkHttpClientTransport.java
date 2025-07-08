@@ -129,7 +129,7 @@ public class OkHttpClientTransport extends AbstractHttpClientTransport {
         OkHttpClient client = this.client.newBuilder()
                 // Disable the read timeout.
                 .readTimeout(0, TimeUnit.MILLISECONDS)
-                // Schedule a task to timeout the request.
+                // Schedule a task to time out the request.
                 .build();
 
         requestBuilder = requestBuilder
@@ -173,7 +173,7 @@ public class OkHttpClientTransport extends AbstractHttpClientTransport {
                     // Blocking I/O, unfortunately.
                     try (ResponseBody body = response.body()) {
                         cancelTimeoutTask(timeoutRef);
-                        String content = body == null ? "" : body.string();
+                        String content = body.string();
                         processResponseContent(listener, messages, content);
                     }
                 } else {
