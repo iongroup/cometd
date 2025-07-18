@@ -9,7 +9,7 @@
   </parent>
   <artifactId>cometd-java-oort-jakarta</artifactId>
   <packaging>jar</packaging>
-  <name>CometD :: Java :: Oort :: Jakarta EE10</name>
+  <name>CometD :: Java :: Oort :: Jakarta EE11</name>
 
   <dependencies>
     <dependency>

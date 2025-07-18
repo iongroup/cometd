@@ -8,7 +8,7 @@
     <version>8.0.10-SNAPSHOT</version>
   </parent>
   <artifactId>cometd-java-client-websocket-jakarta</artifactId>
-  <name>CometD :: Java :: Client :: WebSocket :: Jakarta EE10</name>
+  <name>CometD :: Java :: Client :: WebSocket :: Jakarta EE11</name>
 
   <dependencies>
     <dependency>
