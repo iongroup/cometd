@@ -13,7 +13,8 @@
 
   <modules>
     <module>cometd-java-examples-embedded</module>
-    <module>cometd-java-examples-springboot</module>
+    <!-- Disabled since Spring Boot does not yet support Jetty 12.1.x -->
+    <!--<module>cometd-java-examples-springboot</module>-->
   </modules>
 
   <properties>
