@@ -79,6 +79,7 @@ import org.eclipse.jetty.util.Callback;
 import org.eclipse.jetty.util.NanoTime;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.AutoLock;
+import org.eclipse.jetty.util.thread.Invocable;
 import org.eclipse.jetty.websocket.server.WebSocketUpgradeHandler;
 
 public class CometDLoadServer {
@@ -334,10 +335,13 @@ public class CometDLoadServer {
                 context.getContext().setAttribute(BayeuxServer.ATTRIBUTE, bayeuxServer);
                 context.setAttribute(ContextHandler.MANAGED_ATTRIBUTES, BayeuxServer.ATTRIBUTE);
 
-                WebSocketUpgradeHandler wsHandler = WebSocketUpgradeHandler.from(server, context);
+                Invocable.InvocationType invocationType = Invocable.InvocationType.BLOCKING;
+
+                WebSocketUpgradeHandler wsHandler = WebSocketUpgradeHandler.from(server, context, container ->
+                    container.setInvocationType(invocationType));
                 context.setHandler(wsHandler);
 
-                wsHandler.setHandler(new CometDHandler());
+                wsHandler.setHandler(new CometDHandler(invocationType));
             }
             default -> throw new IllegalArgumentException("Invalid transport: " + transport);
         }
