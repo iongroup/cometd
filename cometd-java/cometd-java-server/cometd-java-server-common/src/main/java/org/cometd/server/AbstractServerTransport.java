@@ -19,8 +19,8 @@ package org.cometd.server;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
+
 import org.cometd.bayeux.Promise;
 import org.cometd.bayeux.server.ServerMessage;
 import org.cometd.bayeux.server.ServerTransport;
@@ -47,6 +47,7 @@ public abstract class AbstractServerTransport extends AbstractTransport implemen
     public static final String HANDSHAKE_RECONNECT_OPTION = "handshakeReconnect";
     public static final String ALLOW_MESSAGE_DELIVERY_DURING_HANDSHAKE = "allowMessageDeliveryDuringHandshake";
     public static final String MAX_MESSAGE_SIZE_OPTION = "maxMessageSize";
+    private static final Throwable SCHEDULER_CANCELLED = new SchedulerCancelledException();
     // /meta/connect cycles must be shared because a transport may fallback to another.
     private static final AtomicLong META_CONNECT_CYCLES = new AtomicLong();
 
@@ -288,7 +289,9 @@ public abstract class AbstractServerTransport extends AbstractTransport implemen
          * that will trigger when the /meta/connect timeout fires.
          */
         public default void cancel() {
-            cancel(new TimeoutException());
+            // As this method is invoked frequently,
+            // use a static exception for performance.
+            cancel(SCHEDULER_CANCELLED);
         }
 
         /**
@@ -325,6 +328,12 @@ public abstract class AbstractServerTransport extends AbstractTransport implemen
             public String toString() {
                 return String.format("%s@%x[cycle=%d]", getClass().getSimpleName(), hashCode(), getMetaConnectCycle());
             }
+        }
+    }
+
+    private static class SchedulerCancelledException extends Exception {
+        public SchedulerCancelledException() {
+            super(null, null, false, false);
         }
     }
 }
