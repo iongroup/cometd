@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.List;
+
 import org.cometd.bayeux.server.ServerMessage;
 import org.cometd.common.BufferingJSONAsyncParser;
 import org.cometd.common.JSONContext;
@@ -96,7 +97,7 @@ public class JSONHttpTransport extends AbstractHttpTransport {
         private int total;
 
         private AbstractReader(TransportContext context) {
-            super(InvocationType.NON_BLOCKING);
+            super(Invocable.getInvocationType(context.request()));
             this.context = context;
         }
 

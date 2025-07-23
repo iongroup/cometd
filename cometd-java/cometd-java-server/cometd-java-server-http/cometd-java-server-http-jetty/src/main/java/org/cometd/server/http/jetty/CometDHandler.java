@@ -18,6 +18,7 @@ package org.cometd.server.http.jetty;
 
 import java.util.Map;
 import java.util.Objects;
+
 import org.cometd.bayeux.Promise;
 import org.cometd.bayeux.server.BayeuxServer;
 import org.cometd.bayeux.server.ServerSession;
@@ -127,7 +128,7 @@ public class CometDHandler extends Handler.Abstract {
             return true;
         }
 
-        JettyCometDRequest cometDRequest = new JettyCometDRequest(request);
+        JettyCometDRequest cometDRequest = new JettyCometDRequest(request, getInvocationType());
         JettyCometDResponse cometDResponse = new JettyCometDResponse(response);
         JettyBayeuxContext bayeuxContext = new JettyBayeuxContext(request);
 

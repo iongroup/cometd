@@ -21,19 +21,23 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.function.Consumer;
+
 import org.cometd.server.CometDRequest;
 import org.eclipse.jetty.http.HttpCookie;
 import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.Fields;
 import org.eclipse.jetty.util.IO;
+import org.eclipse.jetty.util.thread.Invocable;
 
-class JettyCometDRequest implements CometDRequest {
+class JettyCometDRequest implements CometDRequest, Invocable {
     private final Request request;
+    private final Invocable.InvocationType invocationType;
     private Input cometDInput;
 
-    public JettyCometDRequest(Request request) {
+    public JettyCometDRequest(Request request, Invocable.InvocationType invocationType) {
         this.request = request;
+        this.invocationType = invocationType;
     }
 
     @Override
@@ -93,6 +97,12 @@ class JettyCometDRequest implements CometDRequest {
     @Override
     public void addFailureHandler(Consumer<Throwable> handler) {
         request.addFailureListener(handler);
+    }
+
+    @Override
+    public InvocationType getInvocationType()
+    {
+        return invocationType;
     }
 
     private static class JettyCometDInput implements Input {
