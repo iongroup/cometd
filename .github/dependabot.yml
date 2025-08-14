@@ -33,6 +33,8 @@ updates:
         versions: [ ">=5.0.0" ]
       - dependency-name: "com.squareup.okhttp3:okhttp"
         versions: [ ">=5.0.0" ]
+      - dependency-name: "com.diffplug.spotless:spotless-maven-plugin"
+        versions: [ ">2.30.0" ]
 
   - package-ecosystem: "maven"
     directory: "/"
