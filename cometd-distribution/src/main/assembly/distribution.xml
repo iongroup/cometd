@@ -16,6 +16,7 @@
         <exclude>**/.idea/**</exclude>
         <exclude>**/*.iml</exclude>
         <exclude>.gitignore</exclude>
+        <exclude>.github</exclude>
       </excludes>
       <fileMode>0444</fileMode>
       <directoryMode>0755</directoryMode>
