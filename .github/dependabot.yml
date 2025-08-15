@@ -47,6 +47,8 @@ updates:
     ignore:
       - dependency-name: "com.google.inject:guice"
         versions: [ ">=7.0.0" ]
+      - dependency-name: "com.google.javascript:closure-compiler"
+        versions: [ ">=v20240317" ]
       - dependency-name: "org.graalvm.js:js"
         versions: [ ">=23.0.0" ]
       - dependency-name: "org.springframework:*"
