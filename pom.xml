@@ -91,17 +91,17 @@
     <jackson-version>2.19.2</jackson-version>
     <jakarta-ee-version>10.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
-    <jetty-version>12.0.24</jetty-version>
+    <jetty-version>12.0.25</jetty-version>
     <!-- end::jetty-version[] -->
     <maven-compiler-plugin-version>3.14.0</maven-compiler-plugin-version>
     <maven-war-plugin-version>3.4.0</maven-war-plugin-version>
     <njord.autoPublish>true</njord.autoPublish>
-    <njord.version>0.7.5</njord.version>
+    <njord.version>0.8.3</njord.version>
     <okhttp-version>5.1.0</okhttp-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>2.0.17</slf4j-version>
     <spring-boot-version>3.5.4</spring-boot-version>
-    <spring-version>6.2.9</spring-version>
+    <spring-version>6.2.10</spring-version>
   </properties>
 
   <dependencyManagement>
@@ -327,7 +327,6 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.46.1</version>
         <configuration>
           <pom>
             <includes>
@@ -518,7 +517,7 @@
     <extensions>
       <extension>
         <groupId>eu.maveniverse.maven.njord</groupId>
-        <artifactId>extension</artifactId>
+        <artifactId>extension3</artifactId>
         <version>${njord.version}</version>
       </extension>
     </extensions>
