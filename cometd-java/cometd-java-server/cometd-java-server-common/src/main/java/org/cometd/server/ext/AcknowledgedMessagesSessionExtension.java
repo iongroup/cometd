@@ -235,7 +235,7 @@ public class AcknowledgedMessagesSessionExtension implements Extension, ServerSe
             try {
                 listener.onBatchSend(session, messages, batch);
             } catch (Throwable x) {
-                _logger.info("Exception while invoking listener " + listener, x);
+                _logger.info("Exception while invoking listener {}", listener, x);
             }
         }
     }
@@ -245,7 +245,7 @@ public class AcknowledgedMessagesSessionExtension implements Extension, ServerSe
             try {
                 listener.onBatchReceive(session, batch);
             } catch (Throwable x) {
-                _logger.info("Exception while invoking listener " + listener, x);
+                _logger.info("Exception while invoking listener {}", listener, x);
             }
         }
     }
@@ -255,7 +255,7 @@ public class AcknowledgedMessagesSessionExtension implements Extension, ServerSe
             try {
                 listener.onBatchQueueMaxed(session, queue);
             } catch (Throwable x) {
-                _logger.info("Exception while invoking listener " + listener, x);
+                _logger.info("Exception while invoking listener {}", listener, x);
             }
         }
     }
