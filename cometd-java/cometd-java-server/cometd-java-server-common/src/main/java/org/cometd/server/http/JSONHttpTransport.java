@@ -65,8 +65,7 @@ public class JSONHttpTransport extends AbstractHttpTransport {
             Charset charset = Charset.forName(encoding);
             reader = new CharsetReader(context, charset);
         }
-        CometDRequest.Input input = request.getInput();
-        input.demand(reader);
+        reader.run();
     }
 
     private void process(TransportContext context, String json) {
