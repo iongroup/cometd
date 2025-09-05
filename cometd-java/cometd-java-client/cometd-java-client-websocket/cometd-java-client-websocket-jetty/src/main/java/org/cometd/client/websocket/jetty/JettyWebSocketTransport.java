@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.channels.UnresolvedAddressException;
 import java.time.Duration;
@@ -33,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import org.cometd.bayeux.Message.Mutable;
 import org.cometd.client.transport.ClientTransport;
 import org.cometd.client.transport.TransportListener;
@@ -89,13 +89,14 @@ public class JettyWebSocketTransport extends AbstractWebSocketTransport implemen
     }
 
     @Override
-    protected Delegate connect(String uri, TransportListener listener, List<Mutable> messages) {
+    protected Delegate connect(String uriString, TransportListener listener, List<Mutable> messages) {
         try {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Opening websocket session to {}", uri);
+                LOGGER.debug("Opening websocket session to {}", uriString);
             }
-            ClientUpgradeRequest request = new ClientUpgradeRequest();
-            List<HttpCookie> cookies = getHttpCookieStore().match(URI.create(uri));
+            URI uri = URI.create(uriString);
+            ClientUpgradeRequest request = new ClientUpgradeRequest(uri);
+            List<HttpCookie> cookies = getHttpCookieStore().match(uri);
             request.setCookies(cookies.stream().map(HttpCookie::asJavaNetHttpCookie).toList());
             String protocol = getProtocol();
             if (protocol != null) {
@@ -104,7 +105,7 @@ public class JettyWebSocketTransport extends AbstractWebSocketTransport implemen
             if (isPerMessageDeflateEnabled()) {
                 request.addExtensions("permessage-deflate");
             }
-            Delegate delegate = connect(_webSocketClient, request, uri);
+            Delegate delegate = connect(_webSocketClient, request);
             _webSocketConnected = true;
             return delegate;
         } catch (ConnectException | SocketTimeoutException | UnresolvedAddressException | UnknownHostException x) {
@@ -123,13 +124,13 @@ public class JettyWebSocketTransport extends AbstractWebSocketTransport implemen
         return null;
     }
 
-    protected Delegate connect(WebSocketClient client, ClientUpgradeRequest request, String uri) throws IOException, InterruptedException {
+    protected Delegate connect(WebSocketClient client, ClientUpgradeRequest request) throws IOException, InterruptedException {
         try {
             Delegate delegate = newDelegate();
             // The connect() should be failed by the WebSocket implementation,
             // but will use Future.get(timeout) to avoid implementation bugs.
             long timeout = getConnectTimeout() + 1000;
-            client.connect(delegate, new URI(uri), request, this).get(timeout, TimeUnit.MILLISECONDS);
+            client.connect(delegate, request, this).get(timeout, TimeUnit.MILLISECONDS);
             return delegate;
         } catch (TimeoutException e) {
             throw new ConnectException("Connect timeout");
@@ -142,8 +143,6 @@ public class JettyWebSocketTransport extends AbstractWebSocketTransport implemen
                 throw (IOException)cause;
             }
             throw new IOException(cause);
-        } catch (URISyntaxException x) {
-            throw new IOException(x);
         }
     }
 
@@ -196,8 +195,9 @@ public class JettyWebSocketTransport extends AbstractWebSocketTransport implemen
         }
 
         @Override
-        public void onWebSocketClose(int closeCode, String reason) {
+        public void onWebSocketClose(int closeCode, String reason, Callback callback) {
             onClose(closeCode, reason);
+            callback.succeed();
         }
 
         @Override

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSessionChannel;
@@ -317,16 +318,17 @@ public class MultipleClientSessionsTest extends ClientServerTest {
 
         JSONContext.Client parser = new JettyJSONContextClient();
 
-        String handshakeContent = "[{" +
-                "\"id\":\"1\"," +
-                "\"channel\":\"/meta/handshake\"," +
-                "\"version\":\"1.0\"," +
-                "\"supportedConnectionTypes\":[\"long-polling\"]" +
-                "}]";
+        String handshakeContent = """
+            [{
+            "id": "1",
+            "channel": "/meta/handshake",
+            "version": "1.0",
+            "supportedConnectionTypes": ["long-polling"]
+            }]""";
         ContentResponse handshake = httpClient.newRequest("localhost", connector.getLocalPort())
                 .method(HttpMethod.POST)
                 .path(cometdServletPath)
-                .body(new StringRequestContent("application/json;charset=UTF-8", handshakeContent))
+                .body(new StringRequestContent("application/json", handshakeContent))
                 .timeout(5, TimeUnit.SECONDS)
                 .send();
         Assertions.assertEquals(200, handshake.getStatus());
@@ -338,33 +340,37 @@ public class MultipleClientSessionsTest extends ClientServerTest {
         Assertions.assertEquals(1, messages.size());
         String clientId = messages.get(0).getClientId();
 
-        String connectContent1 = "[{" +
-                "\"id\":\"2\"," +
-                "\"channel\":\"/meta/connect\"," +
-                "\"connectionType\":\"long-polling\"," +
-                "\"clientId\":\"" + clientId + "\"," +
-                "\"advice\": {\"timeout\":0}" +
-                "}]";
+        String connectContent1 = """
+            [{
+            "id": "2",
+            "channel": "/meta/connect",
+            "connectionType": "long-polling",
+            "clientId": "%s",
+            "advice": {
+              "timeout": 0
+            }
+            }]""".formatted(clientId);
         ContentResponse connect1 = httpClient.newRequest("localhost", connector.getLocalPort())
                 .method(HttpMethod.POST)
                 .path(cometdServletPath)
-                .body(new StringRequestContent("application/json;charset=UTF-8", connectContent1))
+                .body(new StringRequestContent("application/json", connectContent1))
                 .timeout(5, TimeUnit.SECONDS)
                 .send();
         Assertions.assertEquals(200, connect1.getStatus());
 
         // This /meta/connect is suspended.
         CountDownLatch abortedConnectLatch = new CountDownLatch(1);
-        String connectContent2 = "[{" +
-                "\"id\":\"3\"," +
-                "\"channel\":\"/meta/connect\"," +
-                "\"connectionType\":\"long-polling\"," +
-                "\"clientId\":\"" + clientId + "\"" +
-                "}]";
+        String connectContent2 = """
+            [{
+            "id": "3",
+            "channel": "/meta/connect",
+            "connectionType": "long-polling",
+            "clientId": "%s"
+            }]""".formatted(clientId);
         httpClient.newRequest("localhost", connector.getLocalPort())
                 .method(HttpMethod.POST)
                 .path(cometdServletPath)
-                .body(new StringRequestContent("application/json;charset=UTF-8", connectContent2))
+                .body(new StringRequestContent("application/json", connectContent2))
                 .timeout(5, TimeUnit.SECONDS)
                 .send(result -> {
                     Assertions.assertTrue(result.isSucceeded());
@@ -376,17 +382,20 @@ public class MultipleClientSessionsTest extends ClientServerTest {
         Thread.sleep(1000);
 
         // Send the second /meta/connect before the previous returns.
-        String connectContent3 = "[{" +
-                "\"id\":\"4\"," +
-                "\"channel\":\"/meta/connect\"," +
-                "\"connectionType\":\"long-polling\"," +
-                "\"clientId\":\"" + clientId + "\"," +
-                "\"advice\": {\"timeout\":0}" +
-                "}]";
+        String connectContent3 = """
+            [{
+            "id": "4",
+            "channel": "/meta/connect",
+            "connectionType": "long-polling",
+            "clientId": "%s",
+            "advice": {
+              "timeout": 0
+            }
+            }]""".formatted(clientId);
         ContentResponse connect3 = httpClient.newRequest("localhost", connector.getLocalPort())
                 .method(HttpMethod.POST)
                 .path(cometdServletPath)
-                .body(new StringRequestContent("application/json;charset=UTF-8", connectContent3))
+                .body(new StringRequestContent("application/json", connectContent3))
                 .timeout(5, TimeUnit.SECONDS)
                 .send();
         Assertions.assertEquals(200, connect3.getStatus());
@@ -394,16 +403,17 @@ public class MultipleClientSessionsTest extends ClientServerTest {
         Assertions.assertTrue(abortedConnectLatch.await(5, TimeUnit.SECONDS));
 
         // Make sure a subsequent connect does not have the multiple-clients advice.
-        String connectContent4 = "[{" +
-                "\"id\":\"5\"," +
-                "\"channel\":\"/meta/connect\"," +
-                "\"connectionType\":\"long-polling\"," +
-                "\"clientId\":\"" + clientId + "\"" +
-                "}]";
+        String connectContent4 = """
+            [{
+            "id": "5",
+            "channel": "/meta/connect",
+            "connectionType": "long-polling",
+            "clientId": "%s"
+            }]""".formatted(clientId);
         ContentResponse connect4 = httpClient.newRequest("localhost", connector.getLocalPort())
                 .method(HttpMethod.POST)
                 .path(cometdServletPath)
-                .body(new StringRequestContent("application/json;charset=UTF-8", connectContent4))
+                .body(new StringRequestContent("application/json", connectContent4))
                 .timeout(2 * timeout, TimeUnit.MILLISECONDS)
                 .send();
         Assertions.assertEquals(200, connect4.getStatus());

@@ -27,6 +27,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.Promise;
 import org.cometd.client.http.common.AbstractHttpClientTransport;
@@ -127,7 +128,7 @@ public class JettyHttpClientTransport extends AbstractHttpClientTransport {
     }
 
     private void send(TransportListener listener, List<Message.Mutable> messages, URI cookieURI, Request request) {
-        request.listener(new Request.Listener() {
+        request.onRequestListener(new Request.Listener() {
             @Override
             public void onHeaders(Request request) {
                 listener.onSending(messages);

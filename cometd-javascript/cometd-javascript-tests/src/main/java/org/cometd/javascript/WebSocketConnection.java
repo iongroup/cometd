@@ -18,6 +18,7 @@ package org.cometd.javascript;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+
 import org.eclipse.jetty.websocket.api.Callback;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
@@ -52,7 +53,7 @@ public class WebSocketConnection implements Session.Listener.AutoDemanding {
         try {
             URI uri = new URI(url);
 
-            ClientUpgradeRequest request = new ClientUpgradeRequest();
+            ClientUpgradeRequest request = new ClientUpgradeRequest(uri);
             if (protocol != null) {
                 request.setSubProtocols(protocol);
             }
@@ -60,7 +61,7 @@ public class WebSocketConnection implements Session.Listener.AutoDemanding {
             if (logger.isDebugEnabled()) {
                 logger.debug("Opening WebSocket session to {}", uri);
             }
-            wsClient.connect(this, uri, request);
+            wsClient.connect(this, request);
         } catch (Throwable x) {
             // This method is invoked from JavaScript, so we must fail asynchronously
             wsClient.getExecutor().execute(() -> onWebSocketError(x));
@@ -130,13 +131,14 @@ public class WebSocketConnection implements Session.Listener.AutoDemanding {
     }
 
     @Override
-    public void onWebSocketClose(int closeCode, String reason) {
+    public void onWebSocketClose(int closeCode, String reason, Callback callback) {
         if (logger.isDebugEnabled()) {
             logger.debug("WebSocket closed with code {}/{}", closeCode, reason);
         }
         // Use single quotes so they do not mess up with quotes in the reason string
         Object event = javaScript.evaluate("event", "({code:" + closeCode + ",reason:'" + reason + "'})");
         javaScript.invoke(false, jsWebSocket, "onclose", event);
+        callback.succeed();
     }
 
     @Override

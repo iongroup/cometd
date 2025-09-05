@@ -78,7 +78,7 @@ public class BayeuxClientTest extends ClientServerTest {
         ClientTransport transport = new JettyHttpClientTransport(null, httpClient) {
             @Override
             protected void customize(Request request) {
-                request.listener(new Request.Listener() {
+                request.onRequestListener(new Request.Listener() {
                     @Override
                     public void onBegin(Request request) {
                         // Remove the host header so the request will fail
@@ -209,7 +209,7 @@ public class BayeuxClientTest extends ClientServerTest {
         context.addFilter(new FilterHolder(filter), "/*", EnumSet.of(DispatcherType.REQUEST));
         context.start();
 
-        BlockingArrayQueue<Message> queue = new BlockingArrayQueue<>(100, 100);
+        BlockingArrayQueue<Message> queue = BlockingArrayQueue.newInstance(100, Integer.MAX_VALUE);
         AtomicBoolean connected = new AtomicBoolean(false);
         BayeuxClient client = new BayeuxClient(cometdURL, new JettyHttpClientTransport(null, httpClient)) {
             {
@@ -255,19 +255,19 @@ public class BayeuxClientTest extends ClientServerTest {
         Assertions.assertNotNull(message);
         Assertions.assertFalse(message.isSuccessful());
         Object exception = message.get("exception");
-        Assertions.assertTrue(exception instanceof TransportException);
+        Assertions.assertInstanceOf(TransportException.class, exception);
 
         message = queue.poll(2000 + 2 * backoffIncrement, TimeUnit.MILLISECONDS);
         Assertions.assertNotNull(message);
         Assertions.assertFalse(message.isSuccessful());
         exception = message.get("exception");
-        Assertions.assertTrue(exception instanceof TransportException);
+        Assertions.assertInstanceOf(TransportException.class, exception);
 
         message = queue.poll(2000 + 3 * backoffIncrement, TimeUnit.MILLISECONDS);
         Assertions.assertNotNull(message);
         Assertions.assertFalse(message.isSuccessful());
         exception = message.get("exception");
-        Assertions.assertTrue(exception instanceof TransportException);
+        Assertions.assertInstanceOf(TransportException.class, exception);
 
         filter.code = 0;
 
@@ -424,9 +424,9 @@ public class BayeuxClientTest extends ClientServerTest {
             Assertions.assertNotNull(failure);
             Object exception = failure.get("exception");
             if (listening.get()) {
-                Assertions.assertTrue(exception instanceof TransportException);
+                Assertions.assertInstanceOf(TransportException.class, exception);
             } else {
-                Assertions.assertTrue(exception instanceof ConnectException);
+                Assertions.assertInstanceOf(ConnectException.class, exception);
             }
             latch.countDown();
         });
@@ -751,7 +751,7 @@ public class BayeuxClientTest extends ClientServerTest {
             @Override
             protected void customize(Request request) {
                 if (failHandShake.compareAndSet(true, false)) {
-                    request.listener(new Request.Listener() {
+                    request.onRequestListener(new Request.Listener() {
                         @Override
                         public void onBegin(Request request) {
                             request.headers(headers -> headers.remove(HttpHeader.HOST));

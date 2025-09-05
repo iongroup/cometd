@@ -27,6 +27,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
 import jakarta.websocket.ClientEndpointConfig;
 import jakarta.websocket.WebSocketContainer;
 import org.cometd.bayeux.Channel;
@@ -201,9 +202,9 @@ public class BayeuxClientWebSocketTest extends ClientServerWebSocketTest {
                     };
             case WEBSOCKET_JETTY -> new JettyWebSocketTransport(null, null, wsClient) {
                 @Override
-                protected Delegate connect(WebSocketClient client, ClientUpgradeRequest request, String uri) throws IOException, InterruptedException {
+                protected Delegate connect(WebSocketClient client, ClientUpgradeRequest request) throws IOException, InterruptedException {
                     try {
-                        return super.connect(client, request, uri);
+                        return super.connect(client, request);
                     } catch (ConnectException x) {
                         // Convert recoverable exception to unrecoverable.
                         throw new IOException(x);

@@ -274,7 +274,6 @@ public class CometDLoadServer {
         }
 
         HttpConfiguration httpConfiguration = new HttpConfiguration();
-        httpConfiguration.setDelayDispatchUntilContent(true);
         ConnectionFactory http = new HttpConnectionFactory(httpConfiguration);
         HTTP2ServerConnectionFactory http2 = tls ? new HTTP2ServerConnectionFactory(httpConfiguration) : new HTTP2CServerConnectionFactory(httpConfiguration);
         ConnectionFactory[] factories = {http, http2};

@@ -20,6 +20,7 @@ import org.cometd.bayeux.Promise;
 import org.cometd.bayeux.server.BayeuxContext;
 import org.cometd.bayeux.server.ServerSession;
 import org.cometd.server.websocket.common.AbstractWebSocketEndPoint;
+import org.eclipse.jetty.websocket.api.Callback;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,8 +50,9 @@ public class JettyWebSocketEndPoint extends AbstractWebSocketEndPoint implements
     }
 
     @Override
-    public void onWebSocketClose(int code, String reason) {
+    public void onWebSocketClose(int code, String reason, Callback callback) {
         onClose(code, reason);
+        callback.succeed();
     }
 
     @Override
