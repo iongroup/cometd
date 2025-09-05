@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.Promise;
@@ -181,7 +181,7 @@ public abstract class AbstractHttpTransport extends AbstractServerTransport {
                 if (failure instanceof HttpException) {
                     super.fail(failure);
                 } else {
-                    int code = failure instanceof TimeoutException ? getDuplicateMetaConnectHttpResponseCode() : 500;
+                    int code = failure instanceof SchedulerCancelledException ? getDuplicateMetaConnectHttpResponseCode() : 500;
                     super.fail(new HttpException(code, failure));
                 }
             }

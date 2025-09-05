@@ -331,8 +331,8 @@ public abstract class AbstractServerTransport extends AbstractTransport implemen
         }
     }
 
-    private static class SchedulerCancelledException extends Exception {
-        public SchedulerCancelledException() {
+    protected static class SchedulerCancelledException extends Exception {
+        private SchedulerCancelledException() {
             super(null, null, false, false);
         }
     }
