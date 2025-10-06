@@ -27,6 +27,7 @@ import org.cometd.server.BayeuxServerImpl;
 import org.cometd.server.websocket.common.AbstractBayeuxContext;
 import org.cometd.server.websocket.common.AbstractWebSocketTransport;
 import org.eclipse.jetty.http.HttpFields;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Context;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Session;
@@ -155,7 +156,11 @@ public class JettyWebSocketTransport extends AbstractWebSocketTransport {
                     if (v == null) {
                         v = new ArrayList<>(1);
                     }
-                    v.addAll(field.getValueList());
+                    if (HttpHeader.COOKIE.is(k)) {
+                        v.add(field.getValue());
+                    } else {
+                        v.addAll(field.getValueList());
+                    }
                     return v;
                 });
             });

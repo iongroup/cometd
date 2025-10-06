@@ -88,7 +88,7 @@
 
   <properties>
     <graalvm-version>24.2.2</graalvm-version>
-    <jackson-version>2.19.2</jackson-version>
+    <jackson-version>2.20.0</jackson-version>
     <jakarta-ee-version>11.0.0</jakarta-ee-version>
     <!-- tag::jetty-version[] -->
     <jetty-version>12.1.1</jetty-version>
@@ -101,7 +101,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j-version>2.0.17</slf4j-version>
     <spring-boot-version>3.5.4</spring-boot-version>
-    <spring-version>6.2.10</spring-version>
+    <spring-version>6.2.11</spring-version>
   </properties>
 
   <dependencyManagement>
@@ -276,7 +276,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -291,7 +291,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.3</version>
+          <version>3.5.4</version>
           <configuration>
             <argLine>@{argLine} -showversion -Xmx1g -Xms1g -Xlog:gc* -XX:+PrintCommandLineFlags</argLine>
           </configuration>
