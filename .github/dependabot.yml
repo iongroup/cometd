@@ -34,7 +34,9 @@ updates:
       - dependency-name: "com.squareup.okhttp3:okhttp"
         versions: [ ">=5.0.0" ]
       - dependency-name: "com.diffplug.spotless:spotless-maven-plugin"
-        versions: [ ">2.30.0" ]
+        versions: [ ">=2.30.0" ]
+      - dependency-name: "org.junit.jupiter:junit-jupiter"
+        versions: [ ">=6.0.0" ]
 
   - package-ecosystem: "maven"
     directory: "/"
@@ -59,6 +61,10 @@ updates:
         versions: [ ">=6.0.0" ]
       - dependency-name: "com.squareup.okhttp3:okhttp"
         versions: [ ">=5.0.0" ]
+      - dependency-name: "com.diffplug.spotless:spotless-maven-plugin"
+        versions: [ ">=3.0.0" ]
+      - dependency-name: "org.junit.jupiter:junit-jupiter"
+        versions: [ ">=6.0.0" ]
 
   - package-ecosystem: "maven"
     directory: "/"
@@ -71,6 +77,8 @@ updates:
     ignore:
       - dependency-name: "jakarta.platform:jakarta.jakartaee-bom"
         versions: [ ">=11.0.0" ]
+      - dependency-name: "org.eclipse.jetty:*"
+        versions: [ ">=12.1.0" ]
 
   - package-ecosystem: "github-actions"
     directory: "/"
