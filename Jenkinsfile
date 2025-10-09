@@ -15,15 +15,15 @@ pipeline {
           agent { node { label "linux-light" } }
           steps {
             timeout(time: 15, unit: "MINUTES") {
-              mavenBuild("jdk24", "clean compile javadoc:javadoc", false)
+              mavenBuild("jdk25", "clean compile javadoc:javadoc", false)
             }
           }
         }
-        stage("Java 24") {
+        stage("Java 25") {
           agent { node { label "linux-light" } }
           steps {
             timeout(time: 1, unit: "HOURS") {
-              mavenBuild("jdk24", "clean install", true)
+              mavenBuild("jdk25", "clean install", true)
               recordIssues id: "analysis", name: "Static Analysis", aggregatingResults: true, enabledForFailure: true,
                       tools: [mavenConsole(), java(), checkStyle(), javaDoc()], skipPublishingChecks: true, skipBlames: true
               recordCoverage name: "Coverage", id: "coverage", tools: [[parser: "JACOCO"]], sourceCodeRetention: "LAST_BUILD",
