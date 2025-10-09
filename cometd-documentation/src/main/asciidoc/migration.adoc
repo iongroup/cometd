@@ -982,14 +982,14 @@ cometd.configure({
 ----
 |===
 
-[[_migration_80_to_81]]
-=== Migrating from CometD 8.0.x to CometD 8.1.x
+[[_migration_80_to_90]]
+=== Migrating from CometD 8.0.x to CometD 9.0.x
 
 ==== Jetty Dependency Changes
 
 [cols="1,1", options="header"]
 |===
-| CometD 8.0.x  | CometD 8.1.x
+| CometD 8.0.x  | CometD 9.0.x
 | Jetty 12.0.x | Jetty 12.1.x
 |===
 
@@ -997,7 +997,7 @@ cometd.configure({
 
 [cols="1a,1a", options="header"]
 |===
-| CometD 8.0.x | CometD 8.1.x
+| CometD 8.0.x | CometD 9.0.x
 | Servlet 6.0 (Jakarta EE 10) | Servlet 6.1 (Jakarta EE 11)
 |===
 
@@ -1006,7 +1006,7 @@ cometd.configure({
 [cols="1a,1a", options="header"]
 |===
 | CometD 8.0.x
-| CometD 8.1.x
+| CometD 9.0.x
 
 |
 [source,xml]

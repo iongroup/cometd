@@ -61,16 +61,16 @@ Define value for property 'groupId': : org.cometd.primer
 Define value for property 'artifactId': : es6-jetty12-primer
 Define value for property 'version':  1.0-SNAPSHOT: :
 Define value for property 'package':  org.cometd.primer: :
-[INFO] Using property: cometd-version = 8.0.0
-[INFO] Using property: jetty-version = 12.0.0
+[INFO] Using property: cometd-version = 9.0.0
+[INFO] Using property: jetty-version = 12.1.0
 ...
 Confirm properties configuration:
 groupId: org.cometd.primer
 artifactId: es6-jetty12-primer
 version: 1.0-SNAPSHOT
 package: org.cometd.primer
-cometd-version: 8.0.0
-jetty-version: 12.0.0
+cometd-version: 9.0.0
+jetty-version: 12.1.0
 ...
 Y: :
 ...
@@ -140,7 +140,7 @@ If you want to use a Jetty version different from CometD's default Jetty version
 
     <properties>
         ...
-        <jetty-version>12.0.0</jetty-version>
+        <jetty-version>12.1.0</jetty-version>
         ...
     </properties>
 

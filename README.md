@@ -5,13 +5,13 @@ Welcome to the [CometD](https://cometd.org) Project, a scalable comet (server pu
 
 ### CometD Versions
 
-| CometD Version | Min Java Version | Min Jetty Version | Servlet APIs             |
-|----------------|------------------|-------------------|--------------------------|
-| `8.1.x`        | Java 17          | Jetty 12.1.x      | EE11 `jakarta.servlet.*` |
-| `8.0.x`        | Java 17          | Jetty 12.0.x      | EE10 `jakarta.servlet.*` |
-| `7.0.x`        | Java 11          | Jetty 11.0.x      | EE9  `jakarta.servlet.*` |
-| `6.0.x`        | Java 11          | Jetty 10.0.x      | EE8  `javax.servlet.*`   |
-| `5.0.x`        | Java 8           | Jetty 9.4.x       | EE7  `javax.servlet.*`   |
+| CometD Version | Min Java Version | Min Jetty Version | Servlet APIs             | Status                            |
+|----------------|------------------|-------------------|--------------------------|-----------------------------------|
+| `9.0.x`        | Java 17          | Jetty 12.1.x      | EE11 `jakarta.servlet.*` | Stable                            |
+| `8.0.x`        | Java 17          | Jetty 12.0.x      | EE10 `jakarta.servlet.*` | Stable                            |
+| `7.0.x`        | Java 11          | Jetty 11.0.x      | EE9  `jakarta.servlet.*` | [End-Of-Community-Support](#1754) |
+| `6.0.x`        | Java 11          | Jetty 10.0.x      | EE8  `javax.servlet.*`   | [End-Of-Community-Support](#1754) |
+| `5.0.x`        | Java 8           | Jetty 9.4.x       | EE7  `javax.servlet.*`   | [End-Of-Community-Support](#1179) |
 
 
 ### CometD License

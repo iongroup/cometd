@@ -23,7 +23,7 @@ During the release process, tests are implicitly skipped to speed up the process
 $ mvn release:prepare
 ----
 
-When asked, make sure the version control _tag_ is just the version number, for example `8.0.0`, not `cometd-project-8.0.0`.
+When asked, make sure the version control _tag_ is just the version number, for example `9.0.0`, not `cometd-project-9.0.0`.
 
 ----
 $ mvn release:perform

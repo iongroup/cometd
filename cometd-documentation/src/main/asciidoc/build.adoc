@@ -27,7 +27,7 @@ If you want to use the latest code, clone the GitHub repository with the followi
 ----
 $ git clone https://github.com/cometd/cometd.git cometd
 $ cd cometd
-$ git checkout 8.0.x
+$ git checkout 9.0.x
 ----
 
 === Performing the Build

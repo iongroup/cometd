@@ -18,27 +18,21 @@ The CometD libraries provide these latter characteristics.
 [cols="1a,1a,1a,1a,1a", options="header"]
 |===
 | CometD Version | Required Java Version | Jetty Version | Servlet Edition | Status
+| CometD 9.0.x | Java 17 | Jetty 12.1.x | JakartaEE 11 | Stable
 | CometD 8.0.x | Java 17 | Jetty 12.0.x | JakartaEE 10 | Stable
-
 | CometD 7.0.x | Java 11 | Jetty 11.0.x | JakartaEE 9 +
-`jakarta.servlet.*` | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1179[#1179])
-
+`jakarta.servlet.*` | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1754[#1754])
 | CometD 6.0.x | Java 11 | Jetty 10.0.x | JakartaEE 8 +
 JavaEE 8 +
-`javax.servlet.*` | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1179[#1179])
-
+`javax.servlet.*` | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1754[#1754])
 | CometD 5.0.x | Java 8 | Jetty 9.4.x | JavaEE 7 | End-Of-Community-Support (see https://github.com/cometd/cometd/issues/1179[#1179])
-
 | CometD 4.0.x | Java 8 | Jetty 9.4.x | JavaEE 7 | End-Of-Life
-
 | CometD 3.1.x | Java 7 | Jetty 9.4.x +
 Jetty 9.3.x +
 Jetty 9.2.x | JavaEE 7 +
 JavaEE 6 +
 JavaEE 5 | End-Of-Life
-
 | CometD 3.0.x | Java 7 | Jetty 9.2.x | | End-Of-Life
-
 | CometD 2.x | Java 5 | Jetty 8.1.x +
 Jetty 7.6.x | | End-Of-Life
 |===
