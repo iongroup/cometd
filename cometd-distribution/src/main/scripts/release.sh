@@ -32,7 +32,7 @@ if yes_no "Running release script? (Y/n)" y; then
 
   if yes_no "Relink documentation? (Y/n)" y; then
     echo "Relinking documentation"
-    ssh ubuntu@docs.cometd.org "sudo -u www-data bash -c 'cd ${DOCS_ROOT} && ln -fns ${VERSION} current8'"
+    ssh ubuntu@docs.cometd.org "sudo -u www-data bash -c 'cd ${DOCS_ROOT} && ln -fns ${VERSION} current9'"
   fi
 
   echo "Updating cometd-javascript repository"
