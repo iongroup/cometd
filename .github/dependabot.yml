@@ -84,6 +84,15 @@ updates:
       - dependency-name: "org.springframework.boot:*"
         versions: [ ">=4.0.0" ]
 
+  - package-ecosystem: "maven"
+    directory: "/"
+    open-pull-requests-limit: 50
+    target-branch: "9.0.x"
+    commit-message:
+      prefix: "[9.0.x] "
+    schedule:
+      interval: "daily"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
