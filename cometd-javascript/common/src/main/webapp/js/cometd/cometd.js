@@ -984,6 +984,10 @@
             }
         }
 
+        _self.createWebSocket = function(url, protocol) {
+            return protocol ? new global.WebSocket(url, protocol) : new global.WebSocket(url);
+        };
+
         function _websocketConnect(context) {
             // We may have multiple attempts to open a WebSocket
             // connection, for example a /meta/connect request that
@@ -999,7 +1003,7 @@
 
             try {
                 const protocol = _cometd.getConfiguration().protocol;
-                context.webSocket = protocol ? new global.WebSocket(url, protocol) : new global.WebSocket(url);
+                context.webSocket = this.createWebSocket(url, protocol);
                 _connecting = context;
             } catch (x) {
                 _webSocketSupported = false;
@@ -1097,7 +1101,7 @@
             }
         }
 
-        function _webSocketSend(context, envelope, metaConnect) {
+        _self._webSocketSend = function(context, envelope, metaConnect, _isOnOpen) {
             let json;
             try {
                 json = this.convertToJSON(envelope.messages);
@@ -1124,6 +1128,10 @@
             // Use string length (UTF-8) as an approximation
             this.onStat({ tx: json.length });
 
+            this._webSocketSentEnvelope(context, envelope, metaConnect);
+        };
+
+        _self._webSocketSentEnvelope = function(context, envelope, metaConnect) {
             // Manage the timeout waiting for the response.
             let delay = this.getConfiguration().maxNetworkDelay;
             if (metaConnect) {
@@ -1143,7 +1151,7 @@
             }
 
             this._debug('Transport', this.getType(), 'started waiting for message replies', delay, 'ms, messageIds:', messageIds, ', timeouts:', context.timeouts);
-        }
+        };
 
         _self._notifySuccess = function(fn, messages) {
             fn.call(this, messages);
@@ -1164,7 +1172,7 @@
                     _websocketConnect.call(this, context);
                 } else {
                     _storeEnvelope.call(this, context, envelope, metaConnect);
-                    _webSocketSend.call(this, context, envelope, metaConnect);
+                    this._webSocketSend(context, envelope, metaConnect);
                 }
             } catch (x) {
                 // Keep the semantic of calling callbacks asynchronously.
@@ -1189,7 +1197,7 @@
                     // Store the success callback, which is independent from the envelope,
                     // so that it can be used to notify arrival of messages.
                     _successCallback = envelope.onSuccess;
-                    _webSocketSend.call(this, context, envelope, metaConnect);
+                    this._webSocketSend(context, envelope, metaConnect, true);
                 }
             }
         };

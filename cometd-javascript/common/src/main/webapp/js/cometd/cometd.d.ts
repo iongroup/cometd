@@ -29,7 +29,12 @@ export class LongPollingTransport extends Transport {
 
 export class WebSocketTransport extends Transport {
     onStat: (event: { tx: number, rx: number }) => void;
-    webSocketConnected: boolean;
+    readonly webSocketConnected: boolean;
+
+    createWebSocket: (url: string, protocol: string) => WebSocket;
+    _webSocketSend: (context: unknown, envelope: unknown, metaConnect: boolean, isOnOpen?: boolean) => void;
+    _webSocketSentEnvelope: (context: unknown, envelope: unknown, metaConnect: boolean) => void;
+    _notifySuccess: (handler: Function, messages: Message[]) => void;
 }
 
 export interface TransportRegistry {
