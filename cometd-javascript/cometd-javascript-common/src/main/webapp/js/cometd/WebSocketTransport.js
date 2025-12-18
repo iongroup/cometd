@@ -101,6 +101,10 @@ export class WebSocketTransport extends Transport {
         return protocol ? new window.WebSocket(url, protocol) : new window.WebSocket(url);
     }
 
+    get isWebSocketConnected() {
+        return this.#webSocketConnected;
+    }
+
     #websocketConnect(context) {
         // We may have multiple attempts to open a WebSocket
         // connection, for example a /meta/connect request that
