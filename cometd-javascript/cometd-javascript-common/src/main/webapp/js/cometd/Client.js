@@ -36,15 +36,15 @@ function Scheduler() {
         delete _tasks[id];
         return funktion;
     };
-    this.setTimeout = (funktion, delay) => window.setTimeout(funktion, delay);
+    this.setTimeout = (funktion, delay) => globalThis.setTimeout(funktion, delay);
     this.clearTimeout = (id) => {
-        window.clearTimeout(id);
+        globalThis.clearTimeout(id);
     };
 }
 
 /**
  * The scheduler code that will run in the Worker.
- * Workers have a built-in `self` variable similar to `window`.
+ * Workers have a built-in `self` variable similar to `globalThis`.
  */
 function WorkerScheduler() {
     const _tasks = {};
@@ -134,7 +134,7 @@ export class CometD {
     constructor(name) {
         this.#name = name || "default";
         // Initialize transports.
-        if (window.WebSocket) {
+        if (globalThis.WebSocket) {
             this.registerTransport("websocket", new WebSocketTransport());
         }
         this.registerTransport("long-polling", new LongPollingTransport());
@@ -281,13 +281,13 @@ export class CometD {
     #log(level, args) {
         if (this.#config.logger) {
             this.#config.logger(level, args)
-        } else if (window.console) {
-            const logger = window.console[level];
+        } else if (globalThis.console) {
+            const logger = globalThis.console[level];
             if (CometD.#isFunction(logger)) {
                 const now = new Date();
                 [].splice.call(args, 0, 0, CometD.#zeroPad(now.getHours(), 2) + ":" + CometD.#zeroPad(now.getMinutes(), 2) + ":" +
                     CometD.#zeroPad(now.getSeconds(), 2) + "." + CometD.#zeroPad(now.getMilliseconds(), 3));
-                logger.apply(window.console, args);
+                logger.apply(globalThis.console, args);
             }
         }
     }
@@ -323,7 +323,7 @@ export class CometD {
 
     /**
      * Returns whether the given hostAndPort is cross domain.
-     * The default implementation checks against window.location.host
+     * The default implementation checks against globalThis.location.host
      * but this function can be overridden to make it work in non-browser
      * environments.
      *
@@ -331,9 +331,9 @@ export class CometD {
      * @return whether the given hostAndPort is cross domain
      */
     #isCrossDomain(hostAndPort) {
-        if (window.location && window.location.host) {
+        if (globalThis.location && globalThis.location.host) {
             if (hostAndPort) {
-                return hostAndPort !== window.location.host;
+                return hostAndPort !== globalThis.location.host;
             }
         }
         return false;
@@ -385,15 +385,15 @@ export class CometD {
             }
         }
 
-        if (window.Worker && window.Blob && window.URL && this.#config.useWorkerScheduler) {
+        if (globalThis.Worker && globalThis.Blob && globalThis.URL && this.#config.useWorkerScheduler) {
             let code = WorkerScheduler.toString();
             // Remove the function declaration, the opening brace and the closing brace.
             code = code.substring(code.indexOf("{") + 1, code.lastIndexOf("}"));
-            const blob = new window.Blob([code], {
+            const blob = new globalThis.Blob([code], {
                 type: "application/json"
             });
-            const blobURL = window.URL.createObjectURL(blob);
-            const worker = new window.Worker(blobURL);
+            const blobURL = globalThis.URL.createObjectURL(blob);
+            const worker = new globalThis.Worker(blobURL);
             // Replace setTimeout() and clearTimeout() with the worker implementation.
             this.#scheduler.setTimeout = (funktion, delay) => {
                 const id = this.#scheduler.register(funktion);

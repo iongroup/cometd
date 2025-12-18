@@ -98,7 +98,7 @@ export class WebSocketTransport extends Transport {
     }
 
     createWebSocket(url, protocol) {
-        return protocol ? new window.WebSocket(url, protocol) : new window.WebSocket(url);
+        return protocol ? new globalThis.WebSocket(url, protocol) : new globalThis.WebSocket(url);
     }
 
     get isWebSocketConnected() {
@@ -427,7 +427,7 @@ export class WebSocketTransport extends Transport {
     accept(version, crossDomain, url) {
         this.debug("Transport", this.type, "accept, supported:", this.#webSocketSupported);
         // Using !! to return a boolean (and not the WebSocket object).
-        return this.#webSocketSupported && !!window.WebSocket && this.cometd.websocketEnabled !== false;
+        return this.#webSocketSupported && !!globalThis.WebSocket && this.cometd.websocketEnabled !== false;
     };
 
     send(envelope, metaConnect) {
