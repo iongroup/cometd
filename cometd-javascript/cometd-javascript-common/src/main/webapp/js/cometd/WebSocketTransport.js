@@ -181,7 +181,7 @@ export class WebSocketTransport extends Transport {
 
         const onmessage = (wsMessage) => {
             this.debug("Transport", this.type, "onmessage", wsMessage, context);
-            this.#onMessage(context, wsMessage);
+            this._onMessage(context, wsMessage);
         };
 
         context.webSocket.onopen = onopen;
@@ -230,7 +230,7 @@ export class WebSocketTransport extends Transport {
         }
     }
 
-    #webSocketSend(context, envelope, metaConnect) {
+    _webSocketSend(context, envelope, metaConnect, isOnOpen) {
         let json;
         try {
             json = this.convertToJSON(envelope.messages);
@@ -253,7 +253,10 @@ export class WebSocketTransport extends Transport {
 
         context.webSocket.send(json);
         this.debug("Transport", this.type, "sent", envelope, "/meta/connect =", metaConnect);
+        this._webSocketSentEnvelope(context, envelope, metaConnect);
+    };
 
+    _webSocketSentEnvelope(context, envelope, metaConnect) {
         // Manage the timeout waiting for the response.
         let delay = this.configuration.maxNetworkDelay;
         if (metaConnect) {
@@ -294,7 +297,7 @@ export class WebSocketTransport extends Transport {
                 this.#websocketConnect(context);
             } else {
                 this.#storeEnvelope(context, envelope, metaConnect);
-                this.#webSocketSend(context, envelope, metaConnect);
+                this._webSocketSend(context, envelope, metaConnect);
             }
         } catch (x) {
             // Keep the semantic of calling callbacks asynchronously.
@@ -319,12 +322,12 @@ export class WebSocketTransport extends Transport {
                 // Store the success callback, which is independent of the envelope,
                 // so that it can be used to notify arrival of messages.
                 this.#successCallback = envelope.onSuccess;
-                this.#webSocketSend(context, envelope, metaConnect);
+                this._webSocketSend(context, envelope, metaConnect, true);
             }
         }
     };
 
-    #onMessage(context, wsMessage) {
+    _onMessage(context, wsMessage) {
         this.debug("Transport", this.type, "received websocket message", wsMessage, context);
 
         if (this.configuration.rearmNetworkDelayAfterMessage) {
