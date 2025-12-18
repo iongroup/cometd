@@ -1,0 +1,19 @@
+{
+    "name": "@ionweb/cometd",
+    "version": "9.0.0-ion2",
+    "description": "Comet and WebSocket library for web messaging",
+    "keywords": ["comet", "websocket", "messaging", "pubsub", "publish", "subscribe", "rpc", "p2p", "peer-to-peer"],
+    "homepage": "https://cometd.org",
+    "bugs": {
+      "url": "https://bugs.cometd.org"
+    },
+    "license": "Apache-2.0",
+    "main": "cometd-javascript/cometd-javascript-common/src/main/webapp/js/cometd/cometd.js",
+    "type": "module",
+    "types": "cometd-javascript/cometd-javascript-common/src/main/webapp/js/cometd/cometd.d.ts",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/iongroup/cometd.git"
+      }
+  }
+  
