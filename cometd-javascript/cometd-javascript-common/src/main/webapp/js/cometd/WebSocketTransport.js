@@ -49,7 +49,7 @@ export class WebSocketTransport extends Transport {
             // Force immediate failure of pending messages to trigger reconnect.
             // This is needed because the server may not reply to our close()
             // and therefore the onclose function is never called.
-            this.#onClose(context, event);
+            this._onClose(context, event);
         }
     }
 
@@ -178,7 +178,7 @@ export class WebSocketTransport extends Transport {
                 this.clearTimeout(context.connectTimer);
             }
 
-            this.#onClose(context, event);
+            this._onClose(context, event);
         };
 
         const onmessage = (wsMessage) => {
@@ -389,14 +389,14 @@ export class WebSocketTransport extends Transport {
         }
     };
 
-    #onClose(context, event) {
+    _onClose(context, event, forceWebSocketSupported) {
         this.debug("Transport", this.type, "closed", context, event);
 
         if (this.#sameContext(context)) {
             // Remember if we were able to connect.
             // This close event could be due to server shutdown,
             // and if it restarts we want to try websocket again.
-            this.#webSocketSupported = this.#stickyReconnect && this.#webSocketConnected;
+            this.#webSocketSupported = forceWebSocketSupported || (this.#stickyReconnect && this.#webSocketConnected);
             this.#connecting = null;
             this.#context = null;
         }

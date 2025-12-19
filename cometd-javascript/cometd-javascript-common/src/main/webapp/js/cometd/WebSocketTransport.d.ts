@@ -6,7 +6,7 @@ interface Envelope {
 }
 
 export class WebSocketTransport extends Transport {
-    protected createWebSocket(url: string, protocol: string): WebSocket;
+    protected createWebSocket(url: string, protocol?: string): WebSocket;
     readonly isWebSocketConnected: boolean;
 
     protected _notifySuccess(fn: Function, messages: Message[]): void;
@@ -14,4 +14,6 @@ export class WebSocketTransport extends Transport {
     protected _webSocketSentEnvelope(context: unknown, envelope: Envelope, metaConnect: boolean): void;
 
     protected _onMessage(context: unknown, wsMessage: { data: unknown }): void;
+
+    protected _onClose(context: unknown, event: CloseEvent, forceWebSocketSupported?: boolean): void;
 }
