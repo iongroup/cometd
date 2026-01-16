@@ -65,7 +65,7 @@ export class Transport {
     };
 
     debug() {
-        this.cometd._debug.apply(this.cometd, arguments);
+        this.cometd && this.cometd._debug.apply(this.cometd, arguments);
     };
 
     get configuration() {
