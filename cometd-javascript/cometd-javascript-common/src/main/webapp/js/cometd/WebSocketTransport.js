@@ -334,6 +334,10 @@ export class WebSocketTransport extends Transport {
     };
 
     _onMessage(context, wsMessage) {
+        if (!this.cometd) {
+            return;
+        }
+
         this.debug("Transport", this.type, "received websocket message", wsMessage, context);
 
         if (this.configuration.rearmNetworkDelayAfterMessage) {
