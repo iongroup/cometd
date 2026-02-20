@@ -69,7 +69,7 @@ export class Transport {
     };
 
     get configuration() {
-        return this.cometd.getConfiguration();
+        return this.cometd?.getConfiguration();
     }
 
     get advice() {
@@ -77,11 +77,11 @@ export class Transport {
     }
 
     setTimeout(funktion, delay) {
-        return this.cometd.setTimeout(funktion, delay);
+        return this.cometd?.setTimeout(funktion, delay);
     }
 
     clearTimeout(id) {
-        this.cometd.clearTimeout(id);
+        this.cometd?.clearTimeout(id);
     };
 
     convertToJSON(messages) {
