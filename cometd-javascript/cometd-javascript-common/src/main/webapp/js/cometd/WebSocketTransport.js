@@ -334,13 +334,9 @@ export class WebSocketTransport extends Transport {
     };
 
     _onMessage(context, wsMessage) {
-        if (!this.cometd) {
-            return;
-        }
-
         this.debug("Transport", this.type, "received websocket message", wsMessage, context);
 
-        if (this.configuration.rearmNetworkDelayAfterMessage) {
+        if (this.configuration?.rearmNetworkDelayAfterMessage) {
             let now = (new Date()).getTime();
             // Max 1 rearm per seconds for performance reasons
             if (!context._lastRearm || (now - context._lastRearm) > 1000) {
